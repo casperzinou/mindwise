@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MindWise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Using the same brand styles from your other pages */
+        :root {
+            --bg-main: #F9FAFB;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --accent-primary: #10B981;
+            --accent-primary-hover: #059669;
+            --border-color: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --error-color: #EF4444;
+            --success-color: #10B981;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Header */
+        .main-header {
+            background-color: #FFF;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 800; font-size: 24px; color: var(--text-primary); text-decoration: none; }
+        .main-header a { text-decoration: none; color: var(--text-secondary); font-weight: 500; }
+        
+        /* Main Content */
+        main { padding: 64px 0; }
+        .welcome-header { margin-bottom: 48px; }
+        h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
+        .welcome-header p { font-size: 18px; color: var(--text-secondary); }
+        .dashboard-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.05);
+        }
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .dashboard-section > p { font-size: 16px; color: var(--text-secondary); margin-bottom: 24px; }
+        
+        /* Form Styles */
+        .form-group { display: flex; gap: 12px; align-items: stretch; }
+        .form-input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        .btn {
+            font-size: 16px; font-weight: 500; padding: 12px 28px;
+            border-radius: 8px; text-decoration: none; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .btn-primary { background-color: var(--accent-primary); color: #FFFFFF; }
+        .btn-primary:hover { background-color: var(--accent-primary-hover); }
+        .btn:disabled { background-color: #D1D5DB; cursor: not-allowed; }
+
+        /* Script Area */
+        .script-container { display: none; } /* Hidden by default */
+        #script-output {
+            width: 100%;
+            height: 140px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #F3F4F6;
+            border: 1px solid var(--border-color);
+            resize: none;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .copy-notice { font-size: 14px; color: var(--text-secondary); margin-top: 12px; }
+        
+        /* Message Area */
+        #message-area { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 15px; display: none; }
+        .message-error { background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; }
+        .message-success { background-color: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7; }
+
+        /* Footer */
+        .main-footer { padding: 48px 0; border-top: 1px solid var(--border-color); text-align: center; }
+        .main-footer p { font-size: 14px; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">MindWise</a>
+            <nav>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="welcome-header">
+                <h1>Dashboard</h1>
+                <!-- The current_user object is passed automatically by Flask-Login -->
+                <p>Welcome, <strong>{{ current_user.email }}</strong>!</p>
+            </div>
+
+            <!-- Section 1: Onboarding -->
+            <div class="dashboard-section" id="onboarding-section">
+                <h2>1. Onboard Your Website</h2>
+                <p>Enter the primary URL of the website you want the chatbot to learn from. We'll scrape the content to build its knowledge base.</p>
+                <form id="onboarding-form">
+                    <div class="form-group">
+                        <input type="url" id="website-url" class="form-input" placeholder="https://your-website.com" required>
+                        <button type="submit" id="generate-btn" class="btn btn-primary">Generate My Script</button>
+                    </div>
+                </form>
+                <div id="message-area"></div>
+            </div>
+
+            <!-- Section 2: Your Script -->
+            <div class="dashboard-section script-container" id="script-section">
+                <h2>2. Your Script</h2>
+                <p>Your unique script is ready. Copy the code below and paste it just before the closing <code>&lt;/body&gt;</code> tag on every page of your website.</p>
+                <textarea id="script-output" readonly></textarea>
+                <p class="copy-notice">Your chatbot will appear on your site within a few minutes after adding the script.</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // If the user already has a client_id, show their script on page load
+            const existingClientId = "{{ current_user.client_id or '' }}";
+            if (existingClientId) {
+                displayScript(existingClientId);
+            }
+
+            const form = document.getElementById('onboarding-form');
+            const generateBtn = document.getElementById('generate-btn');
+            const urlInput = document.getElementById('website-url');
+            const messageArea = document.getElementById('message-area');
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                // Disable button to prevent multiple submissions
+                generateBtn.disabled = true;
+                generateBtn.textContent = 'Generating...';
+                showMessage('', 'clear'); // Clear previous messages
+
+                const websiteUrl = urlInput.value;
+
+                try {
+                    const response = await fetch('/dashboard/create-script', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ website_url: websiteUrl }),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showMessage('Success! Your script has been generated below.', 'success');
+                        displayScript(result.clientId);
+                    } else {
+                        // Handle server-side errors
+                        throw new Error(result.error || 'An unknown error occurred.');
+                    }
+                } catch (error) {
+                    console.error('Onboarding Error:', error);
+                    showMessage(`Error: ${error.message}`, 'error');
+                } finally {
+                    // Re-enable button
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = 'Generate My Script';
+                }
+            });
+
+            function displayScript(clientId) {
+                const scriptSection = document.getElementById('script-section');
+                const scriptOutput = document.getElementById('script-output');
+                const onboardingSection = document.getElementById('onboarding-section');
+
+                const scriptContent = `<script src="https://your-domain.com/script.js" data-client-id="${clientId}" defer><\/script>`;
+                
+                scriptOutput.value = scriptContent;
+                scriptSection.style.display = 'block';
+
+                // Optional: Hide the generation form if a script already exists
+                // onboardingSection.style.display = 'none'; 
+            }
+
+            function showMessage(text, type) {
+                messageArea.textContent = text;
+                messageArea.className = ''; // Reset classes
+                if (type === 'error') {
+                    messageArea.classList.add('message-error');
+                    messageArea.style.display = 'block';
+                } else if (type === 'success') {
+                    messageArea.classList.add('message-success');
+                    messageArea.style.display = 'block';
+                } else {
+                    messageArea.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
