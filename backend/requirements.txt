@@ -11,5 +11,5 @@ psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 requests==2.32.3
 SQLAlchemy==2.0.30
-sqlalchemy-pgvector==0.1.2
+pgvector==0.3.3
 Werkzeug==3.0.3
