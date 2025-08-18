@@ -4,7 +4,7 @@ import requests
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import Vector
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import google.generativeai as genai

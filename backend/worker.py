@@ -4,7 +4,7 @@ import logging
 from flask import Flask, request, jsonify
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, Text, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy_pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import Vector
 from bs4 import BeautifulSoup
 import requests
 from langchain.text_splitter import RecursiveCharacterTextSplitter
