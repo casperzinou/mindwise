@@ -13,6 +13,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application's code from the backend directory
 COPY backend/ .
 
-# Run the web server when the container launches
-# Note: Fly.io will override this with the command from fly.toml
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "app:app"]

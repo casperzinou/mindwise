@@ -175,8 +175,7 @@ def ask_bot():
         return jsonify({"status": "human_handoff", "answer": "I'm having trouble accessing my knowledge. I can create a support ticket."}), 500
 
 # --- STARTUP ---
-with app.app_context():
-    db.create_all()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8081)))

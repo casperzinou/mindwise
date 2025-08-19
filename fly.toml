@@ -10,12 +10,8 @@ kill_timeout = '5s'
   dockerfile = "backend/Dockerfile"
 
 [processes]
-  # The Web App process - lightweight and always on
   web = "gunicorn --bind :8080 --workers 1 app:app"
-  
-  # The AI Worker process - heavier and does the background work
-  worker = "python worker.py" # <-- THIS LINE IS FIXED
-
+  worker = "gunicorn --bind :8080 --workers 1 worker:app"
 [http_service]
   internal_port = 8080
   force_https = true
