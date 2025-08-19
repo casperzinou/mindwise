@@ -4,121 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - MindWise</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <style>
-        /* Using the same brand styles from your other pages */
-        :root {
-            --bg-main: #F9FAFB;
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
-            --accent-primary: #10B981;
-            --accent-primary-hover: #059669;
-            --border-color: #E5E7EB;
-            --card-bg: #FFFFFF;
-            --error-color: #EF4444;
-            --success-color: #10B981;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-        
-        /* Header */
-        .main-header {
-            background-color: #FFF;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo { font-weight: 800; font-size: 24px; color: var(--text-primary); text-decoration: none; }
-        .main-header a { text-decoration: none; color: var(--text-secondary); font-weight: 500; }
-        
-        /* Main Content */
-        main { padding: 64px 0; }
-        .welcome-header { margin-bottom: 48px; }
-        h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
-        .welcome-header p { font-size: 18px; color: var(--text-secondary); }
-        .dashboard-section {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.05);
-        }
-        h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-        .dashboard-section > p { font-size: 16px; color: var(--text-secondary); margin-bottom: 24px; }
-        
-        /* Form Styles */
-        .form-group { display: flex; gap: 12px; align-items: stretch; }
-        .form-input {
-            flex-grow: 1;
-            padding: 12px 16px;
-            font-size: 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-        .btn {
-            font-size: 16px; font-weight: 500; padding: 12px 28px;
-            border-radius: 8px; text-decoration: none; cursor: pointer;
-            border: 1px solid transparent; transition: all 0.2s ease-in-out;
-            white-space: nowrap;
-        }
-        .btn-primary { background-color: var(--accent-primary); color: #FFFFFF; }
-        .btn-primary:hover { background-color: var(--accent-primary-hover); }
-        .btn:disabled { background-color: #D1D5DB; cursor: not-allowed; }
-
-        /* Script Area */
-        .script-container { display: none; } /* Hidden by default */
-        #script-output {
-            width: 100%;
-            height: 140px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            padding: 16px;
-            border-radius: 8px;
-            background-color: #F3F4F6;
-            border: 1px solid var(--border-color);
-            resize: none;
-            white-space: pre;
-            overflow-x: auto;
-        }
-        .copy-notice { font-size: 14px; color: var(--text-secondary); margin-top: 12px; }
-        
-        /* Message Area */
-        #message-area { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 15px; display: none; }
-        .message-error { background-color: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; }
-        .message-success { background-color: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7; }
-
-        /* Footer */
-        .main-footer { padding: 48px 0; border-top: 1px solid var(--border-color); text-align: center; }
-        .main-footer p { font-size: 14px; color: var(--text-secondary); }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Link to the consolidated style.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
     <header class="main-header">
         <div class="container">
             <a href="/" class="logo">MindWise</a>
-            <nav>
-                <a href="{{ url_for('logout') }}">Logout</a>
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-links"><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -127,7 +31,6 @@
         <div class="container">
             <div class="welcome-header">
                 <h1>Dashboard</h1>
-                <!-- The current_user object is passed automatically by Flask-Login -->
                 <p>Welcome, <strong>{{ current_user.email }}</strong>!</p>
             </div>
 
@@ -144,44 +47,76 @@
                 <div id="message-area"></div>
             </div>
 
-            <!-- Section 2: Your Script -->
-            <div class="dashboard-section script-container" id="script-section">
-                <h2>2. Your Script</h2>
-                <p>Your unique script is ready. Copy the code below and paste it just before the closing <code>&lt;/body&gt;</code> tag on every page of your website.</p>
-                <textarea id="script-output" readonly></textarea>
-                <p class="copy-notice">Your chatbot will appear on your site within a few minutes after adding the script.</p>
+            <!-- Section 2: Sales Team Handoff Email -->
+            <div class="dashboard-section" id="sales-email-section">
+                <h2>2. Sales Team Handoff Email</h2>
+                <p>Provide an email address for your sales or support team. When the AI detects a high-value lead or a complex issue, it will send a summarized conversation to this email for human follow-up.</p>
+                <form id="sales-email-form">
+                    <div class="form-group">
+                        <input type="email" id="sales-email" name="sales_email" class="form-input" placeholder="sales@yourcompany.com" value="{{ current_user.sales_email or '' }}">
+                        <button type="submit" id="update-sales-email-btn" class="btn btn-primary">Update Email</button>
+                    </div>
+                </form>
+                 <div id="sales-email-message-area" class="messages" style="display:none;"></div>
             </div>
+
+            <!-- Section 3: Your Script -->
+            <div class="dashboard-section script-container" id="script-section">
+                <h2>3. Your Chatbot Script</h2>
+                <p>Your unique script is ready! Copy the code below and paste it just before the closing <code>&lt;/body&gt;</code> tag on every page of your website. Your chatbot will appear within a few minutes after adding the script.</p>
+                <textarea id="script-output" readonly></textarea>
+                <button type="button" id="copy-script-btn" class="btn btn-primary copy-btn">Copy Script</button>
+                <p class="copy-notice">Click to copy. The bot will appear shortly after deployment.</p>
+            </div>
+
+            <!-- Placeholder for other sections (e.g., Analytics) -->
+            <div class="dashboard-section">
+                <h2>4. Analytics & Performance</h2>
+                <p>Coming Soon! This section will provide insights into your chatbot's performance, conversation metrics, and lead generation.</p>
+                <!-- Further content here -->
+            </div>
+
         </div>
     </main>
     
     <footer class="main-footer">
         <div class="container">
-            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a> | <a href="refund.html">Refund Policy</a></p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // If the user already has a client_id, show their script on page load
+            const websiteUrlInput = document.getElementById('website-url');
+            const generateBtn = document.getElementById('generate-btn');
+            const messageArea = document.getElementById('message-area');
+            const scriptSection = document.getElementById('script-section');
+            const scriptOutput = document.getElementById('script-output');
+            const copyScriptBtn = document.getElementById('copy-script-btn');
+            const salesEmailForm = document.getElementById('sales-email-form');
+            const salesEmailInput = document.getElementById('sales-email');
+            const updateSalesEmailBtn = document.getElementById('update-sales-email-btn');
+            const salesEmailMessageArea = document.getElementById('sales-email-message-area');
+
+
+            // --- Initial Load Logic: Display existing script if client_id is present ---
             const existingClientId = "{{ current_user.client_id or '' }}";
+            const existingWebsiteUrl = "{{ current_user.website_url or '' }}"; // Assuming you fetch/store this
+
             if (existingClientId) {
                 displayScript(existingClientId);
+                websiteUrlInput.value = existingWebsiteUrl; 
             }
 
-            const form = document.getElementById('onboarding-form');
-            const generateBtn = document.getElementById('generate-btn');
-            const urlInput = document.getElementById('website-url');
-            const messageArea = document.getElementById('message-area');
 
-            form.addEventListener('submit', async function(event) {
+            // --- Website Onboarding Form Submission ---
+            document.getElementById('onboarding-form').addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
-                // Disable button to prevent multiple submissions
                 generateBtn.disabled = true;
-                generateBtn.textContent = 'Generating...';
-                showMessage('', 'clear'); // Clear previous messages
+                showProcessingMessage('Starting website scan...', 'info', messageArea); // Pass messageArea target
 
-                const websiteUrl = urlInput.value;
+                const websiteUrl = websiteUrlInput.value;
 
                 try {
                     const response = await fetch('/dashboard/create-script', {
@@ -195,49 +130,125 @@
                     const result = await response.json();
 
                     if (response.ok) {
-                        showMessage('Success! Your script has been generated below.', 'success');
-                        displayScript(result.clientId);
+                        showMessage('Success! Your chatbot has been built and script is ready below.', 'success', messageArea);
+                        displayScript(result.client_id);
                     } else {
-                        // Handle server-side errors
-                        throw new Error(result.error || 'An unknown error occurred.');
+                        throw new Error(result.error || result.message || 'An unknown error occurred.');
                     }
                 } catch (error) {
                     console.error('Onboarding Error:', error);
-                    showMessage(`Error: ${error.message}`, 'error');
+                    showMessage(`Error building chatbot: ${error.message}`, 'error', messageArea);
                 } finally {
-                    // Re-enable button
                     generateBtn.disabled = false;
-                    generateBtn.textContent = 'Generate My Script';
+                    generateBtn.innerHTML = 'Generate My Script';
                 }
             });
 
-            function displayScript(clientId) {
-                const scriptSection = document.getElementById('script-section');
-                const scriptOutput = document.getElementById('script-output');
-                const onboardingSection = document.getElementById('onboarding-section');
-
-                const scriptContent = `<script src="https://your-domain.com/script.js" data-client-id="${clientId}" defer><\/script>`;
+            // --- Sales Email Form Submission ---
+            salesEmailForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
                 
+                updateSalesEmailBtn.disabled = true;
+                updateSalesEmailBtn.textContent = 'Updating...';
+                clearMessage(salesEmailMessageArea);
+
+                const salesEmail = salesEmailInput.value;
+
+                try {
+                    const response = await fetch('/dashboard/update-settings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({ sales_email: salesEmail }).toString(),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showMessage('Sales email updated successfully!', 'success', salesEmailMessageArea);
+                    } else {
+                        throw new Error(result.error || result.message || 'An unknown error occurred.');
+                    }
+                } catch (error) {
+                    console.error('Sales Email Update Error:', error);
+                    showMessage(`Error updating sales email: ${error.message}`, 'error', salesEmailMessageArea);
+                } finally {
+                    updateSalesEmailBtn.disabled = false;
+                    updateSalesEmailBtn.textContent = 'Update Email';
+                }
+            });
+
+
+            // --- Helper Functions ---
+            let progressInterval;
+            const progressMessages = [
+                "Initiating website crawl...",
+                "Analyzing page content...",
+                "Extracting key information...",
+                "Generating AI embeddings for knowledge base...",
+                "Almost done! Just a few more moments...",
+                "Finalizing chatbot setup..."
+            ];
+            let currentMessageIndex = 0;
+
+            function showProcessingMessage(initialText, type, targetElement) {
+                // Ensure targetElement is visible and has correct class
+                targetElement.innerHTML = `<span id="progress-text">${initialText}</span> <span class="spinner"></span>`;
+                targetElement.classList.remove('message-error', 'message-success');
+                targetElement.classList.add(`message-${type}`);
+                targetElement.style.display = 'flex';
+
+                currentMessageIndex = 0;
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+                progressInterval = setInterval(() => {
+                    currentMessageIndex = (currentMessageIndex + 1) % progressMessages.length;
+                    document.getElementById('progress-text').textContent = progressMessages[currentMessageIndex];
+                }, 4000);
+            }
+
+            function showMessage(text, type, targetElement) {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+                targetElement.innerHTML = text;
+                targetElement.classList.remove('message-error', 'message-success', 'message-info');
+                targetElement.classList.add(`message-${type}`);
+                targetElement.style.display = 'flex';
+            }
+
+            function clearMessage(targetElement) {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+                targetElement.innerHTML = '';
+                targetElement.style.display = 'none';
+                targetElement.classList.remove('message-error', 'message-success', 'message-info');
+            }
+
+            function displayScript(clientId) {
+                // IMPORTANT: Update this URL to your actual script serving domain
+                const scriptContent = `<script src="https://your-chatbot-domain.com/widget.js" data-client-id="${clientId}" defer><\/script>`;
                 scriptOutput.value = scriptContent;
                 scriptSection.style.display = 'block';
-
-                // Optional: Hide the generation form if a script already exists
-                // onboardingSection.style.display = 'none'; 
             }
 
-            function showMessage(text, type) {
-                messageArea.textContent = text;
-                messageArea.className = ''; // Reset classes
-                if (type === 'error') {
-                    messageArea.classList.add('message-error');
-                    messageArea.style.display = 'block';
-                } else if (type === 'success') {
-                    messageArea.classList.add('message-success');
-                    messageArea.style.display = 'block';
-                } else {
-                    messageArea.style.display = 'none';
-                }
-            }
+            // --- Copy Script Button ---
+            copyScriptBtn.addEventListener('click', function() {
+                scriptOutput.select();
+                scriptOutput.setSelectionRange(0, 99999);
+                document.execCommand('copy');
+
+                const originalText = copyScriptBtn.textContent;
+                copyScriptBtn.textContent = 'Copied!';
+                copyScriptBtn.disabled = true;
+                setTimeout(() => {
+                    copyScriptBtn.textContent = originalText;
+                    copyScriptBtn.disabled = false;
+                }, 2000);
+            });
         });
     </script>
 </body>

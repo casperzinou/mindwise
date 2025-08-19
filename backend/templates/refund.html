@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy - MindWise</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> This line is commented out as it was not present in the original refund.html -->
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo">MindWise</a>
+            <a href="{{ url_for('register_page') }}" class="btn btn-primary cta-button-header">Get Started</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="legal-section">
+            <div class="container legal-content">
+
+                <h1>Refund Policy</h1>
+                <h2 class="last-updated">Last Updated: August 18, 2025</h2>
+                
+                <p>At MindWise, we want to ensure you are satisfied with our service. We offer a straightforward refund policy to give you confidence in your subscription.</p>
+
+                <h2>30-Day Money-Back Guarantee</h2>
+                <p>We offer a 30-day money-back guarantee for all new customers. If you are not satisfied with our service for any reason during the first 30 days of your initial subscription, you are eligible for a full refund.</p>
+
+                <h2>Eligibility</h2>
+                <p>This guarantee applies only to your first subscription purchase and does not apply to subsequent renewals or upgrades.</p>
+                <p>Refund requests must be submitted within 30 calendar days of the original purchase date.</p>
+
+                <h2>How to Request a Refund</h2>
+                <p>To request a refund, please contact our support team at [Your Support Email] with your account details and the reason for your request.</p>
+
+                <h2>Processing Your Refund</h2>
+                <p>Once your request is received and approved, we will process the refund to your original method of payment. Please allow 5-10 business days for the refund to appear on your statement.</p>
+
+                <h2>Questions</h2>
+                <p>If you have any questions about our Refund Policy, please contact us at [Your Support Email].</p>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2025 MindWise. All rights reserved. | <a href="{{ url_for('privacy') }}">Privacy Policy</a> | <a href="{{ url_for('terms') }}">Terms of Service</a> | <a href="{{ url_for('refund') }}">Refund Policy</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>
