@@ -3,369 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Your Account | MindWise</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest"> 
+    <title>Register | MindWise</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Include the reCAPTCHA API script here -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <style>
-        /* ---------------------------------- */
-        /* ----- Global Styles & Reset ---- */
-        /* ---------------------------------- */
-        :root {
-            --bg-main: #0F0F0F; /* Very dark background */
-            --bg-card: #1A1A1A; /* Slightly lighter dark for cards */
-            --text-primary: #E0E0E0; /* Light text for main content */
-            --text-secondary: #A0A0A0; /* Slightly darker light text for secondary info */
-            
-            --accent-purple: #9333EA; /* A vibrant purple */
-            --accent-blue: #3B82F6; /* A bright blue */
-            --accent-green: #22C55E; /* A vivid green */
-            
-            --gradient-start: #2A2A2A; /* Gradient start for subtle depth */
-            --gradient-end: #1A1A1A; /* Gradient end */
-
-            --border-color: #333333; /* Darker border for accents */
-            --shadow-dark: 0 8px 30px rgba(0,0,0,0.6); /* Pronounced dark shadow */
-            --shadow-subtle: 0 4px 15px rgba(0,0,0,0.3); /* Subtle dark shadow */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh; /* Ensure full viewport height */
-            display: flex;
-            flex-direction: column;
-
-            /* Enhanced background for the whole body for a more immersive dark theme */
-            background-image: radial-gradient(circle at 40% 15%, rgba(93, 64, 174, 0.2) 0%, transparent 50%), /* Soft purple glow from top-left */
-                              radial-gradient(circle at 60% 85%, rgba(34, 211, 235, 0.15) 0%, transparent 60%); /* Soft blue glow from bottom-right */
-            background-blend-mode: screen, overlay; /* Blend modes to make them work together */
-            background-size: 150% 150%; /* Make gradients larger than viewport */
-            animation: subtlyShiftBackground 30s ease-in-out infinite alternate; /* Add subtle movement */
-        }
-
-        @keyframes subtlyShiftBackground {
-            0% { background-position: 50% 50%; }
-            100% { background-position: 60% 60%; } /* Shift position slightly */
-        }
-
-        /* ---------------------------------- */
-        /* ----- Layout & Containers ------ */
-        /* ---------------------------------- */
-        .container {
-            max-width: 1280px; /* Consistent with index.html */
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 32px; /* Consistent with index.html */
-            padding-right: 32px;
-        }
-
-        main {
-            flex-grow: 1; /* Allows main content to grow and push footer down */
-            display: flex; /* Make main a flex container for centering */
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            padding: 60px 0; /* Add some padding for smaller screens */
-        }
-        
-        .section-centered {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%; /* Ensure it takes full width of parent */
-        }
-
-        /* ---------------------------------- */
-        /* ----- Typography --------------- */
-        /* ---------------------------------- */
-        h1, h2, h3, h4 {
-            font-weight: 900; /* Consistent with index.html */
-            letter-spacing: -0.04em; /* Consistent with index.html */
-            color: var(--text-primary);
-        }
-
-        h2 {
-            font-size: 40px; /* Adjusted for smaller context */
-            margin-bottom: 40px;
-        }
-
-        p {
-            color: var(--text-secondary);
-            font-size: 19px; /* Consistent with index.html */
-        }
-
-        a {
-            color: var(--accent-blue); /* Consistent with index.html */
-            text-decoration: none;
-            transition: color 0.2s ease;
-            font-weight: 600; /* Consistent with index.html */
-        }
-
-        a:hover {
-            color: var(--accent-purple); /* Consistent with index.html */
-            text-decoration: underline; /* Keep underline for clarity on text links */
-        }
-
-        /* ---------------------------------- */
-        /* ----- Components --------------- */
-        /* ---------------------------------- */
-        .btn {
-            display: inline-block;
-            font-size: 18px; /* Consistent with index.html */
-            font-weight: 700; /* Consistent with index.html */
-            padding: 18px 36px; /* Consistent with index.html */
-            border-radius: 12px; /* Consistent with index.html */
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease-in-out;
-            width: 100%; /* Full width for forms */
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
-            color: #FFFFFF;
-            box-shadow: 0 10px 20px rgba(147, 51, 234, 0.3), 0 5px 10px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(147, 51, 234, 0.4), 0 8px 15px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            z-index: -1;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-        
-        /* Message display styles */
-        .messages {
-            list-style: none;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .messages li.error {
-            background-color: rgba(255, 99, 71, 0.2); /* Tomato red with transparency */
-            color: #FF6347; /* Brighter red text */
-            border: 1px solid #FF6347;
-            box-shadow: 0 4px 10px rgba(255, 99, 71, 0.2);
-        }
-        .messages li.success {
-            background-color: rgba(34, 197, 94, 0.2); /* Vibrant green with transparency */
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
-        }
-        .messages li.warning {
-            background-color: rgba(255, 165, 0, 0.2); /* Orange with transparency */
-            color: #FFA500;
-            border: 1px solid #FFA500;
-            box-shadow: 0 4px 10px rgba(255, 165, 0, 0.2);
-        }
-
-
-        /* ---------------------------------- */
-        /* ----- Header / Navigation ------ */
-        /* ---------------------------------- */
-        .main-header {
-            background-color: rgba(15, 15, 15, 0.8); /* Dark, translucent header */
-            backdrop-filter: blur(15px); /* Stronger blur */
-            -webkit-backdrop-filter: blur(15px);
-            padding: 20px 0; /* More padding */
-            border-bottom: 1px solid var(--border-color); /* Subtle dark border */
-            position: sticky; /* Keep it sticky */
-            top: 0;
-            z-index: 100; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); /* Darker shadow */
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-weight: 900; /* Consistent with index.html */
-            font-size: 28px; /* Consistent with index.html */
-            color: var(--text-primary);
-            letter-spacing: -0.05em; /* Consistent with index.html */
-            transition: color 0.3s ease;
-        }
-        
-        .logo:hover {
-            color: var(--accent-blue); /* Add hover effect for logo */
-            text-decoration: none; /* Ensure no underline on logo hover */
-        }
-        
-        /* ---------------------------------- */
-        /* ----- Auth Forms --------------- */
-        /* ---------------------------------- */
-        .auth-card {
-            background-color: var(--bg-card); /* Darker card background */
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 48px;
-            max-width: 500px; /* Slightly wider for better layout */
-            width: 100%;
-            text-align: left;
-            box-shadow: var(--shadow-dark); /* More prominent shadow */
-        }
-
-        .auth-card h2 {
-            font-size: 32px; /* Consistent with general H2 styling, adjusted for card */
-            text-align: center;
-            margin-bottom: 32px;
-            font-weight: 800; /* Ensure it's bold within the card */
-        }
-
-        .form-group {
-            margin-bottom: 28px; /* More spacing between fields */
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 15px; /* Slightly larger */
-            font-weight: 600; /* Bolder label */
-            color: var(--text-primary);
-            margin-bottom: 10px; /* More space below label */
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 18px; /* More padding */
-            font-size: 17px; /* Larger font size for inputs */
-            border: 1px solid var(--border-color);
-            border-radius: 10px; /* More rounded */
-            background-color: #252525; /* Slightly lighter dark for input background */
-            color: var(--text-primary); /* Light text in input */
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent-blue); /* Blue accent on focus */
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); /* Blue glowing shadow */
-            background-color: #2B2B2B; /* Slightly lighter on focus */
-        }
-        
-        .form-footer-link {
-            text-align: center;
-            margin-top: 32px; /* More space */
-            font-size: 15px; /* Slightly larger */
-            color: var(--text-secondary);
-        }
-
-        /* ---------------------------------- */
-        /* ----- Footer ------------------- */
-        /* ---------------------------------- */
-        .main-footer {
-            padding: 60px 0; /* Consistent with index.html */
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            background-color: var(--bg-main);
-        }
-        
-        .main-footer p {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin: 0 auto;
-        }
-
-        /* ---------------------------------- */
-        /* ----- Responsive Design -------- */
-        /* ---------------------------------- */
-        @media (max-width: 768px) {
-            .container { padding-left: 20px; padding-right: 20px; }
-            main { padding: 40px 0; }
-            .auth-card {
-                padding: 30px;
-            }
-            .auth-card h2 {
-                font-size: 28px;
-                margin-bottom: 30px;
-            }
-            .form-group {
-                margin-bottom: 20px;
-            }
-            .form-group input {
-                padding: 12px 16px;
-                font-size: 16px;
-            }
-            .btn {
-                padding: 16px 28px;
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .auth-card {
-                border-radius: 12px;
-                padding: 25px;
-            }
-            .auth-card h2 {
-                font-size: 24px;
-                margin-bottom: 25px;
-            }
-            .form-group label {
-                font-size: 13px;
-                margin-bottom: 8px;
-            }
-            .form-group input {
-                padding: 10px 14px;
-                font-size: 15px;
-            }
-            .btn {
-                font-size: 15px;
-                padding: 14px 24px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
 </head>
 <body>
 
     <header class="main-header">
         <div class="container">
-            <a href="index.html" class="logo">MindWise</a>
+            <a href="{{ url_for('index') }}" class="logo">MindWise</a>
         </div>
     </header>
 
@@ -373,9 +26,9 @@
         <section class="auth-section section-centered">
             <div class="container">
                 <div class="auth-card">
-                    <h2>Create Your MindWise Account</h2>
+                    <h2>Create Your Account</h2>
 
-                    <!-- Flash Messages Placeholder (for messages from Flask backend) -->
+                    <!-- Flash Messages Placeholder -->
                     {% with messages = get_flashed_messages(with_categories=true) %}
                       {% if messages %}
                         <ul class="messages">
@@ -386,10 +39,11 @@
                       {% endif %}
                     {% endwith %}
 
-                    <!-- Client-side JavaScript Messages Placeholder -->
-                    <ul class="messages" id="js-messages" style="display:none;"></ul> 
-
-                    <form method="POST" action="/register"> <!-- Action should be relative path /register -->
+                    <form method="POST" action="/register"> <!-- Assuming /register is the POST endpoint -->
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required autocomplete="name">
+                        </div>
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email" id="email" name="email" required autocomplete="email">
@@ -399,21 +53,15 @@
                             <input type="password" id="password" name="password" required autocomplete="new-password">
                         </div>
                         <div class="form-group">
-                            <label for="confirm-password">Confirm Password</label>
-                            <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password">
                         </div>
-
-                        <!-- Google reCAPTCHA v2 "I'm not a robot" Checkbox -->
-                        <div class="form-group" style="margin-top: 20px; margin-bottom: 30px;">
-                            <div class="g-recaptcha" data-sitekey="6Lf7uasrAAAAAPZ8hQrGM3MYhg3Ul45LWmOlWsDo"></div>
-                        </div>
-
                         <div class="form-group" style="margin-top: 32px;">
-                            <button type="submit" class="btn btn-primary">Create Account & Start Trial</button>
+                            <button type="submit" class="btn btn-primary">Register for $1 Trial</button>
                         </div>
                     </form>
                     <p class="form-footer-link">
-                        Already have an account? <a href="login.html">Log In</a>
+                        Already have an account? <a href="{{ url_for('login_page') }}">Log In</a>
                     </p>
                 </div>
             </div>
@@ -422,42 +70,9 @@
 
     <footer class="main-footer">
         <div class="container">
-            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            <p>© 2025 MindWise. All rights reserved. | <a href="{{ url_for('privacy') }}">Privacy Policy</a> | <a href="{{ url_for('terms') }}">Terms of Service</a></p>
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form'); // Select the form
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirm-password');
-            const jsMessagesList = document.getElementById('js-messages'); // Element to display JS messages
-
-            form.addEventListener('submit', function(event) {
-                // Clear previous JS messages
-                jsMessagesList.innerHTML = '';
-                jsMessagesList.style.display = 'none'; // Hide the list initially
-
-                // Check if passwords match
-                if (passwordInput.value !== confirmPasswordInput.value) {
-                    event.preventDefault(); // Stop the form from submitting
-
-                    // Display an error message
-                    const errorMessage = document.createElement('li');
-                    errorMessage.className = 'error'; // Apply your error styling
-                    errorMessage.textContent = 'Passwords do not match. Please re-enter them.';
-                    jsMessagesList.appendChild(errorMessage);
-                    jsMessagesList.style.display = 'block'; // Show the list
-
-                    // Optional: Focus back on the password field for convenience
-                    passwordInput.focus();
-                }
-
-                // If passwords match, the form will proceed to submit.
-                // Backend reCAPTCHA and other validations will then run.
-            });
-        });
-    </script>
 
 </body>
 </html>
