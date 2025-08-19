@@ -43,4 +43,4 @@ kill_timeout = '5s'
   processes = ["worker"]
   [services.ports]
     port = 8080
-    handlers = ["tcp"] # <--- ENSURE NO EXTRA CHARACTERS HERE
+    handlers = ["http"] # 
