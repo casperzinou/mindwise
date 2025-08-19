@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found - MindWise</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Link to the consolidated style.css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> This line is commented out as it was not present in the original 404.html -->
+    <link rel="stylesheet" href="style.css">
     <style>
         /* Specific styles for the 404 page, building on top of global styles */
         .error-404-main {
@@ -110,12 +108,9 @@
 
     <header class="main-header">
         <div class="container">
-            <a href="{{ url_for('dashboard') }}" class="logo">MindWise</a> <!-- Link to dashboard if logged in, or index -->
+            <a href="index.html" class="logo">MindWise</a>
             <nav class="main-nav">
-                <ul>
-                    <li class="nav-links"><a href="{{ url_for('logout') }}">Logout</a></li>
-                    <!-- Add other nav links if appropriate for error page, or simplify -->
-                </ul>
+                <!-- Simplified nav for an error page -->
             </nav>
         </div>
     </header>
@@ -126,14 +121,14 @@
                 <h1>404</h1>
                 <h2>Page Not Found</h2>
                 <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please check the URL for typos.</p>
-                <a href="{{ url_for('index') }}" class="btn btn-primary">Go to Homepage</a>
+                <a href="index.html" class="btn btn-primary">Go to Homepage</a>
             </div>
         </div>
     </main>
 
     <footer class="main-footer">
         <div class="container">
-            <p>© 2025 MindWise. All rights reserved. | <a href="{{ url_for('privacy') }}">Privacy Policy</a> | <a href="{{ url_for('terms') }}">Terms of Service</a> | <a href="{{ url_for('refund') }}">Refund Policy</a></p>
+            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a> | <a href="refund.html">Refund Policy</a></p>
         </div>
     </footer>
 
