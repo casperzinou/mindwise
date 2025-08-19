@@ -1,0 +1,1196 @@
+/* ---------------------------------- */
+/* ----- Global Styles & Reset ---- */
+/* ---------------------------------- */
+:root {
+    --bg-main: #0F0F0F; /* Very dark background */
+    --bg-card: #1A1A1A; /* Slightly lighter dark for cards */
+    --text-primary: #E0E0E0; /* Light text for main content */
+    --text-secondary: #A0A0A0; /* Slightly darker light text for secondary info */
+    
+    --accent-purple: #9333EA; /* A vibrant purple */
+    --accent-blue: #3B82F6; /* A bright blue */
+    --accent-green: #22C55E; /* A vivid green */
+    
+    --gradient-start: #2A2A2A; /* Gradient start for subtle depth */
+    --gradient-end: #1A1A1A; /* Gradient end */
+
+    --border-color: #333333; /* Darker border for accents */
+    --shadow-dark: 0 8px 30px rgba(0,0,0,0.6); /* Pronounced dark shadow */
+    --shadow-subtle: 0 4px 15px rgba(0,0,0,0.3); /* Subtle dark shadow */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh; /* Ensure full viewport height */
+    display: flex;
+    flex-direction: column;
+
+    /* Enhanced background for the whole body for a more immersive dark theme */
+    background-image: radial-gradient(circle at 40% 15%, rgba(93, 64, 174, 0.2) 0%, transparent 50%),
+                      radial-gradient(circle at 60% 85%, rgba(34, 211, 235, 0.15) 0%, transparent 60%);
+    background-blend-mode: screen, overlay;
+    background-size: 150% 150%;
+    animation: subtlyShiftBackground 30s ease-in-out infinite alternate;
+}
+
+@keyframes subtlyShiftBackground {
+    0% { background-position: 50% 50%; }
+    100% { background-position: 60% 60%; } /* Shift position slightly */
+}
+
+/* ---------------------------------- */
+/* ----- Layout & Containers ------ */
+/* ---------------------------------- */
+.container {
+    max-width: 1280px; /* Consistent container width for marketing pages */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px; /* Consistent padding */
+    padding-right: 32px;
+}
+/* Specific container width for dashboard */
+main .container {
+    max-width: 960px; /* Wider container for dashboard content */
+}
+
+
+main {
+    flex-grow: 1; /* Allows main content to grow and push footer down */
+    display: flex; /* For centering content in auth pages */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* For auth pages to center vertically */
+    padding: 60px 0; /* Base padding for main content sections */
+}
+/* Override default for general sections that need full vertical padding */
+main > section {
+    padding: 120px 0; /* More generous section padding for marketing pages */
+    width: 100%; /* Ensure it fills container */
+}
+/* Auth sections need less specific top/bottom padding as 'main' handles centering */
+.auth-section {
+    padding: 0; /* Handled by main's flex properties */
+}
+/* Dashboard main content area */
+main.dashboard-main {
+    padding: 80px 0; /* Adjusted main padding for dashboard */
+    align-items: flex-start; /* Align content to start for dashboard layout */
+    justify-content: flex-start;
+}
+
+
+.section-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%; /* Ensure it takes full width of parent */
+}
+
+/* ---------------------------------- */
+/* ----- Typography --------------- */
+/* ---------------------------------- */
+h1, h2, h3, h4 {
+    font-weight: 900; /* Extra bold */
+    letter-spacing: -0.04em; /* Tighter letter spacing */
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 80px; /* Much larger for hero */
+    line-height: 1.05;
+}
+
+/* Adjusted for legal content pages */
+.legal-content h1 {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+/* Adjusted for dashboard H1 */
+.welcome-header h1 {
+    font-size: 52px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    letter-spacing: -0.04em;
+    text-align: left; /* Align dashboard H1 left */
+}
+
+
+h2 {
+    font-size: 60px; /* Larger for section titles */
+    text-align: center;
+    margin-bottom: 80px; /* Default margin for section H2 */
+}
+
+/* Adjusted for auth forms and legal sections */
+.auth-card h2 {
+    font-size: 32px;
+    margin-bottom: 32px;
+    font-weight: 800;
+}
+.legal-content h2 {
+    font-size: 38px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+/* Adjusted for dashboard section H2 */
+.dashboard-section h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    text-align: left; /* Align section titles left */
+    letter-spacing: -0.03em;
+}
+
+
+h3 {
+    font-size: 24px; /* Larger for feature/plan names */
+    margin-bottom: 12px;
+    font-weight: 800;
+}
+
+/* Adjusted for legal content */
+.legal-content h3 {
+    font-size: 28px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+h4 {
+    font-size: 20px; /* For FAQ questions */
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+p {
+    color: var(--text-secondary);
+    font-size: 19px; /* Slightly larger */
+    max-width: 700px; /* Readability */
+}
+/* Specific p styling for dashboard */
+.welcome-header p, .dashboard-section > p {
+    font-size: 20px; /* Larger text */
+    color: var(--text-secondary);
+    max-width: none; /* Override general p max-width */
+    margin-bottom: 24px; /* Default margin for dashboard section p */
+}
+/* Specific margin for dashboard section p */
+.dashboard-section > p {
+    margin-bottom: 30px; /* More space below descriptive text */
+}
+
+.sub-headline {
+    font-size: 22px; /* Larger */
+    margin-top: 32px;
+    color: var(--text-secondary);
+}
+/* Pricing page specific sub-headline */
+#pricing .sub-headline {
+    margin-bottom: 70px;
+}
+
+a {
+    color: var(--accent-blue); /* Use an accent color for links */
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 600; /* Bolder for prominence */
+}
+
+a:hover {
+    color: var(--accent-purple); /* Change color on hover */
+    text-decoration: underline; /* Keep underline for clarity on text links */
+}
+
+/* ---------------------------------- */
+/* ----- Components --------------- */
+/* ---------------------------------- */
+.btn {
+    display: inline-block;
+    font-size: 18px; /* Larger text */
+    font-weight: 700; /* Bolder */
+    padding: 18px 36px; /* More padding */
+    border-radius: 12px; /* More rounded */
+    text-decoration: none;
+    cursor: pointer;
+    border: none; /* No default border */
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%); /* Gradient background */
+    color: #FFFFFF;
+    box-shadow: 0 10px 20px rgba(147, 51, 234, 0.3), 0 5px 10px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.02); /* More pronounced lift and slight scale */
+    box-shadow: 0 15px 30px rgba(147, 51, 234, 0.4), 0 8px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* For a subtle shine effect on hover, like Bolt */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: -1;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--border-color); /* More prominent border */
+    box-shadow: var(--shadow-subtle);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-card); /* Slightly fill on hover */
+    border-color: var(--accent-green); /* Accent border on hover */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-dark);
+}
+
+/* Disabled button state (specific to dashboard) */
+.btn:disabled {
+    background-color: #3A3A3A !important; /* Darker disabled state */
+    color: #707070 !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+
+/* Message display styles (for Flask flash messages and client-side JS) */
+.messages {
+    list-style: none;
+    padding: 15px 20px;
+    margin-bottom: 25px; /* Default margin-bottom for messages */
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+/* Dashboard specific message styling */
+#message-area, #sales-email-message-area {
+    margin-top: 25px; /* More space from form */
+    padding: 18px; /* More padding */
+    border-radius: 12px; /* More rounded */
+    font-size: 16px;
+    font-weight: 600;
+    display: flex; /* Use flex for spinner alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* Space between text and spinner */
+    text-align: center;
+}
+
+
+.messages li.error, .message-error {
+    background-color: rgba(255, 99, 71, 0.2); /* Tomato red with transparency */
+    color: #FF6347; /* Brighter red text */
+    border: 1px solid #FF6347;
+    box-shadow: 0 4px 10px rgba(255, 99, 71, 0.2);
+}
+.messages li.success, .message-success {
+    background-color: rgba(34, 197, 94, 0.2); /* Vibrant green with transparency */
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+}
+.messages li.warning, .message-warning { /* Added .message-warning for consistency */
+    background-color: rgba(255, 165, 0, 0.2); /* Orange with transparency */
+    color: #FFA500;
+    border: 1px solid #FFA500;
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.2);
+}
+/* Info message for processing state */
+.message-info {
+    background-color: rgba(59, 130, 246, 0.2); /* Blue with transparency */
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+}
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid var(--accent-blue); /* Spinner color */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* ---------------------------------- */
+/* ----- Header / Navigation ------ */
+/* ---------------------------------- */
+.main-header {
+    background-color: rgba(15, 15, 15, 0.8); /* Dark, translucent header */
+    backdrop-filter: blur(15px); /* Stronger blur */
+    -webkit-backdrop-filter: blur(15px);
+    padding: 20px 0; /* More padding */
+    border-bottom: 1px solid var(--border-color); /* Subtle dark border */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4); /* Darker shadow */
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: 900; /* Extra bold */
+    font-size: 28px; /* Larger logo */
+    color: var(--text-primary);
+    letter-spacing: -0.05em; /* Tighter letter spacing for logo */
+    transition: color 0.3s ease;
+}
+
+.logo:hover {
+    color: var(--accent-blue); /* Add hover effect for logo */
+    text-decoration: none; /* Ensure no underline on logo hover */
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 32px; /* More space */
+}
+
+.nav-links a { /* Specific class for main nav links */
+    color: var(--text-secondary); /* Lighter links */
+    font-weight: 600; /* Bolder nav links */
+    font-size: 17px;
+    position: relative;
+    padding-bottom: 5px; /* Space for underline */
+}
+
+.nav-links a::after { /* Animated underline */
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+    left: 0;
+    bottom: 0;
+    transition: width 0.3s ease-out;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-actions { /* Container for header buttons/actions */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cta-button-header { /* Styling for the "Get Started" button in header (privacy, refund, terms) */
+    padding: 14px 28px; /* Slightly smaller for header */
+    font-size: 16px;
+}
+
+
+/* ---------------------------------- */
+/* ----- Hero Section ------------- */
+/* ---------------------------------- */
+.hero-section {
+    text-align: center;
+    padding-top: 160px; /* More vertical space */
+    padding-bottom: 160px;
+    position: relative;
+    overflow: hidden;
+    z-index: 2; /* Ensure hero content is above background effects */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px; /* Constrain content width */
+    margin: 0 auto;
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(20px); /* Start slightly lower for animation */
+    animation: fadeInFromBottom 1.5s forwards 0.5s; /* Animation to reveal content */
+}
+
+@keyframes fadeInFromBottom {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-section h1 {
+    background: linear-gradient(90deg, var(--text-primary) 0%, var(--text-secondary) 100%); /* Subtle text gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.0; /* Tighter line height for impact */
+}
+
+.hero-section .sub-headline {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px; /* Space before button */
+    font-size: 24px;
+    line-height: 1.5;
+}
+
+.hero-section .cta-button { /* Specific style for hero CTA button (larger) */
+    margin-top: 50px;
+    font-size: 20px;
+    padding: 20px 40px;
+}
+
+.background-gradient {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1600px; /* Larger spread */
+    height: 1000px;
+
+    /* The core of the Bolt-like background effect */
+    /* Layering multiple gradients for depth */
+    background:
+        /* Soft, large glow (like the blue arc on Bolt) */
+        radial-gradient(circle at 50% 70%, rgba(59, 130, 246, 0.4) 0%, transparent 60%),
+        /* Subtle, higher gradient for depth */
+        radial-gradient(circle at 40% 30%, rgba(147, 51, 234, 0.3) 0%, transparent 70%),
+        /* Dark base to ensure colors pop */
+        radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 80%);
+
+    filter: blur(150px); /* Heavy blur for softness */
+    opacity: 0.7; /* Moderate opacity */
+    z-index: 1; /* Behind hero content */
+}
+
+/* ---------------------------------- */
+/* ----- Features Section --------- */
+/* ---------------------------------- */
+.features-section {
+    background: linear-gradient(180deg, var(--bg-main), var(--gradient-start)); /* Subtle gradient for sections */
+    border-top: 1px solid var(--border-color);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Flexible and larger min width */
+    gap: 48px; /* More space between cards */
+}
+
+.feature-card {
+    background-color: var(--bg-card); /* Darker card background */
+    border: 1px solid var(--border-color);
+    border-radius: 16px; /* More rounded */
+    padding: 40px; /* More padding */
+    text-align: left;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-dark);
+    border-color: var(--accent-green); /* Glow border on hover */
+}
+
+.feature-card .icon {
+    margin-bottom: 28px; /* More space */
+    background-color: rgba(34, 197, 94, 0.15); /* Soft green background */
+    color: var(--accent-green); /* Green icon */
+    width: 64px; /* Larger icon */
+    height: 64px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px; /* SVG icon size */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.feature-card:hover .icon {
+    background-color: rgba(34, 197, 94, 0.3); /* Darker green on hover */
+    color: #FFFFFF;
+}
+
+.feature-card p {
+    font-size: 17px;
+    color: var(--text-secondary);
+}
+
+/* ---------------------------------- */
+/* ----- Pricing Section ---------- */
+/* ---------------------------------- */
+#pricing { /* Pricing section in index.html and pricing.html */
+    /* Background handled by main > section or specific pricing section if needed */
+}
+
+.pricing-card {
+    background-color: var(--bg-card); /* Darker card background */
+    border: 1px solid var(--border-color);
+    border-radius: 20px; /* Even more rounded */
+    padding: 60px; /* More padding */
+    max-width: 600px; /* Max width for card */
+    width: 100%;
+    text-align: left;
+    box-shadow: var(--shadow-dark); /* Stronger shadow */
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--bg-card) 0%, #151515 100%); /* Subtle dark gradient */
+}
+
+.pricing-card .plan-name {
+    font-weight: 800;
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.pricing-card .price {
+    font-size: 80px; /* Much larger price */
+    font-weight: 900;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.pricing-card .price .period {
+    font-size: 24px; /* Larger period text */
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.features-list {
+    list-style: none;
+    margin: 40px 0;
+    text-align: left;
+    padding-left: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.features-list li svg {
+    color: var(--accent-green); /* Vibrant green checkmark */
+    flex-shrink: 0;
+    width: 24px; /* Larger icon */
+    height: 24px;
+}
+
+.pioneer-offer {
+    background-color: rgba(59, 130, 246, 0.1); /* Subtle blue background */
+    border: 1px solid var(--accent-blue);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 50px; /* More spacing */
+    margin-bottom: 0; /* Clear margin if it's the last element */
+    text-align: center;
+    box-shadow: var(--shadow-subtle);
+}
+
+.pioneer-offer p {
+    font-size: 18px !important; /* Use !important only if necessary to override specificity */
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.4;
+    max-width: none; /* Override paragraph max-width for this component */
+}
+
+.pioneer-offer strong {
+    color: var(--accent-green);
+}
+
+/* ---------------------------------- */
+/* ----- Auth Forms --------------- */
+/* ---------------------------------- */
+.auth-card {
+    background-color: var(--bg-card); /* Darker card background */
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 500px;
+    width: 100%;
+    text-align: left;
+    box-shadow: var(--shadow-dark); /* More prominent shadow */
+}
+
+.auth-card h2 {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 32px;
+    font-weight: 800;
+}
+
+.form-group {
+    margin-bottom: 28px; /* More spacing between fields */
+    display: flex; /* Make it a flex container for side-by-side inputs/buttons */
+    gap: 16px; /* Space between flex items */
+    align-items: stretch; /* Stretch items to fill height */
+}
+/* Auth form group specific margin handling */
+.auth-card .form-group {
+    margin-bottom: 28px;
+}
+/* Dashboard form group specific margin handling */
+.dashboard-section .form-group {
+    margin-bottom: 0; /* Clear default margin if used with parent */
+}
+
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.form-input {
+    flex-grow: 1; /* Allows input to take available space in a flex container */
+    padding: 14px 18px;
+    font-size: 17px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #252525; /* Slightly lighter dark for input background */
+    color: var(--text-primary); /* Light text in input */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+    background-color: #2B2B2B;
+}
+
+.form-footer-link {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+/* ---------------------------------- */
+/* ----- Legal Sections ----------- */
+/* ---------------------------------- */
+.legal-section {
+    padding: 80px 0 120px 0; /* Padding around the legal content */
+    background-color: var(--bg-main); /* Ensure dark background for this section */
+}
+
+.legal-content {
+    max-width: 900px; /* Wider content for readability of legal text */
+    margin: 0 auto;
+    background-color: var(--bg-card); /* Dark card background for the content area */
+    padding: 50px; /* More internal padding */
+    border-radius: 16px; /* Rounded corners */
+    box-shadow: var(--shadow-dark); /* Prominent shadow */
+    line-height: 1.8; /* Increased line height for legibility */
+}
+
+.legal-content .last-updated {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+/* Custom list styling for legal sections */
+.legal-content ul {
+    list-style: none; /* Remove default list style */
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+.legal-content ul li {
+    position: relative;
+    padding-left: 30px; /* Space for custom bullet */
+    margin-bottom: 10px;
+    color: var(--text-secondary); /* Text color for list items */
+    font-size: 18px;
+}
+
+.legal-content ul li::before {
+    content: '•'; /* Custom bullet point */
+    color: var(--accent-blue); /* Vibrant color for bullet */
+    font-size: 1.2em;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 900; /* Make bullet bold */
+}
+
+
+/* ---------------------------------- */
+/* ----- FAQ Section -------------- */
+/* ---------------------------------- */
+.faq-section {
+    padding-top: 60px; /* Adjusted padding as it follows pricing section */
+    padding-bottom: 120px; /* Consistent with other sections */
+    background: linear-gradient(180deg, var(--gradient-start), var(--bg-main)); /* Subtle gradient for sections */
+    border-top: 1px solid var(--border-color);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.faq-item {
+    border-top: 1px solid var(--border-color);
+    padding: 30px 0; /* More padding */
+}
+
+.faq-item:last-child {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.faq-item p {
+    font-size: 17px;
+    max-width: 100%; /* Override default max-width for readability */
+    margin-top: 10px; /* Space below question */
+    color: var(--text-secondary);
+}
+
+/* ---------------------------------- */
+/* ----- Footer ------------------- */
+/* ---------------------------------- */
+footer {
+    background-color: var(--bg-main); /* Consistent footer background */
+    color: var(--text-secondary); /* Consistent text color */
+    text-align: center;
+    padding: 60px 0; /* Consistent padding */
+    border-top: 1px solid var(--border-color); /* Consistent border */
+}
+footer p {
+    font-size: 15px; /* Consistent font size */
+    color: var(--text-secondary); /* Ensure text color is consistent */
+    margin: 0 auto;
+}
+footer a {
+    color: var(--accent-blue); /* Consistent link color */
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 600;
+}
+footer a:hover {
+    color: var(--accent-purple);
+    text-decoration: underline;
+}
+
+/* ---------------------------------- */
+/* ----- DASHBOARD SPECIFIC STYLES -- */
+/* ---------------------------------- */
+.welcome-header {
+    margin-bottom: 50px;
+    text-align: left;
+}
+
+.dashboard-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-dark);
+    text-align: left;
+    width: 100%;
+}
+
+/* Script Area */
+.script-container {
+    display: none; /* Hidden by default, will be shown by JS */
+    margin-top: 20px; /* Space from onboarding section if shown simultaneously */
+}
+#script-output {
+    width: 100%;
+    height: 180px; /* Taller for more code */
+    font-family: 'Fira Code', 'Courier New', Courier, monospace; /* Monospace font for code */
+    font-size: 15px;
+    padding: 20px; /* More padding */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #222222; /* Darker background for code */
+    border: 1px solid var(--border-color);
+    color: var(--text-primary); /* Light text for code */
+    resize: vertical; /* Allow vertical resize only */
+    white-space: pre-wrap; /* Wrap long lines */
+    overflow-x: auto;
+    line-height: 1.5;
+}
+.copy-notice {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-top: 15px;
+    text-align: center;
+}
+.copy-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 17px;
+    width: auto; /* Override btn-primary default for this specific button */
+}
+
+/* Sales Team Email Section */
+#sales-email-section h2 {
+    margin-bottom: 15px;
+}
+#sales-email-section p {
+    margin-bottom: 25px;
+}
+#sales-email-form .form-group {
+    max-width: 450px; /* Constrain input width */
+    margin: 0 auto; /* Center the form group */
+}
+#sales-email-form .form-input {
+    text-align: center; /* Center placeholder/text */
+}
+#sales-email-form .btn {
+    width: auto; /* Allow button to shrink */
+    padding: 12px 25px; /* Adjust padding */
+}
+
+
+/* --- CHAT WIDGET STYLES (for potentially injected widget) --- */
+.chat-widget {
+    position: fixed;
+    bottom: 25px; /* Slightly more space from bottom */
+    right: 25px; /* Slightly more space from right */
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.chat-icon-btn {
+    width: 65px; /* Slightly larger icon */
+    height: 65px; /* Slightly larger icon */
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%); /* Vibrant gradient */
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4); /* Darker shadow */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    font-size: 32px; /* Size of internal icon if it's an SVG/font icon */
+}
+.chat-icon-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6); /* More pronounced shadow on hover */
+}
+.chat-window {
+    width: 380px; /* Slightly wider chat window */
+    max-height: 550px; /* Slightly taller */
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.3); /* Deeper shadow */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-card); /* Dark card background */
+    margin-bottom: 20px; /* More space from button */
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid var(--border-color); /* Subtle border */
+}
+.chat-window.open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+.chat-header {
+    background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%); /* Vibrant header */
+    color: white;
+    padding: 18px; /* More padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+}
+.chat-header h2 {
+    margin: 0;
+    font-size: 1.3em;
+    color: white; /* Ensure text is white despite gradient */
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px; /* Larger close button */
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+.close-btn:hover {
+    opacity: 1;
+}
+.chat-body {
+    flex: 1;
+    padding: 20px; /* More padding */
+    overflow-y: auto;
+    background-color: var(--bg-main); /* Match main background for chat body */
+    display: flex;
+    flex-direction: column;
+}
+.message {
+    max-width: 85%; /* Wider messages */
+    margin-bottom: 15px; /* More space between messages */
+    line-height: 1.5;
+    font-size: 16px;
+}
+.message p {
+    padding: 12px 18px; /* More padding */
+    border-radius: 20px; /* More rounded corners */
+    margin: 0;
+    word-wrap: break-word; /* Ensure long words wrap */
+}
+.message.received {
+    align-self: flex-start;
+}
+.message.received p {
+    background-color: #2A2A2A; /* Darker grey for received messages */
+    color: var(--text-primary); /* Light text for received */
+}
+.message.sent {
+    align-self: flex-end;
+}
+.message.sent p {
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue)); /* Vibrant sent messages */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.chat-footer {
+    display: flex;
+    padding: 15px; /* More padding */
+    border-top: 1px solid var(--border-color); /* Darker border */
+    background-color: var(--bg-card); /* Darker background */
+}
+#chat-input {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    border-radius: 25px; /* More rounded */
+    padding: 12px 18px; /* More padding */
+    font-size: 1em;
+    margin-right: 15px; /* More margin */
+    background-color: #252525; /* Slightly lighter dark for input background */
+    color: var(--text-primary); /* Light text in input */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+#chat-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background-color: #2B2B2B;
+}
+#send-message-btn {
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue)); /* Vibrant send button */
+    color: white;
+    border: none;
+    border-radius: 25px; /* More rounded */
+    padding: 12px 25px; /* More padding */
+    cursor: pointer;
+    font-weight: 700; /* Bolder */
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#send-message-btn:hover {
+    background-color: var(--accent-purple); /* Fallback */
+    background-image: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ---------------------------------- */
+/* ----- Responsive Design -------- */
+/* ---------------------------------- */
+@media (max-width: 1024px) {
+    .container { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 64px; }
+    h2 { font-size: 48px; }
+    h3 { font-size: 32px; } /* Adjust for sections */
+    .hero-section, main > section { padding: 100px 0; }
+    .legal-content { padding: 40px; }
+    /* Dashboard Specific */
+    .welcome-header h1 { font-size: 48px; }
+}
+
+@media (max-width: 768px) {
+    .container { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 48px; }
+    h2 { font-size: 38px; margin-bottom: 60px; }
+    h3 { font-size: 22px; }
+    p, .sub-headline { font-size: 17px; }
+
+    .main-nav { display: none; } /* Hide main nav for mobile */
+    .main-header .logo { font-size: 24px; }
+    .cta-button-header { padding: 12px 24px; font-size: 15px; }
+
+    .hero-section { padding-top: 80px; padding-bottom: 80px; }
+    .hero-section .sub-headline { font-size: 20px; margin-bottom: 30px;}
+    .hero-section .cta-button { font-size: 18px; padding: 16px 32px; }
+
+    .features-grid { grid-template-columns: 1fr; gap: 32px; }
+    .feature-card { padding: 30px; }
+    .feature-card .icon { width: 56px; height: 56px; font-size: 28px; }
+
+    #about { padding: 80px 0; }
+    #about h2 { font-size: 38px; }
+    #about p { max-width: none; }
+
+    .pricing-card { padding: 40px; }
+    .pricing-card .plan-name { font-size: 28px; }
+    .pricing-card .price { font-size: 60px; margin-bottom: 25px; }
+    .pricing-card .price .period { font-size: 22px; }
+    .features-list { margin: 30px 0; }
+    .features-list li { font-size: 17px; gap: 12px; margin-bottom: 16px;}
+    .features-list li svg { width: 22px; height: 22px; }
+    .pioneer-offer { margin-top: 40px; }
+
+    .auth-card { padding: 30px; }
+    .auth-card h2 { font-size: 28px; margin-bottom: 30px; }
+    /* Form inputs and buttons - consistent with auth and dashboard forms */
+    .form-group { flex-direction: column; gap: 15px; }
+    .form-input { width: 100%; }
+    .btn { width: 100%; }
+    /* Dashboard specific */
+    .welcome-header { margin-bottom: 30px; text-align: center;}
+    .welcome-header h1 { font-size: 38px; }
+    .welcome-header p { font-size: 18px; }
+    .dashboard-section { padding: 30px; margin-bottom: 30px; }
+    .dashboard-section h2 { font-size: 28px; text-align: center; }
+    .dashboard-section > p { font-size: 17px; margin-bottom: 20px; }
+    #script-output { height: 150px; padding: 15px; font-size: 14px; }
+    .copy-notice { font-size: 13px; margin-top: 10px; }
+    #message-area, #sales-email-message-area { padding: 15px; font-size: 14px; gap: 10px; }
+    .spinner { width: 20px; height: 20px; border-width: 3px; }
+    #sales-email-form .form-group { max-width: 100%; }
+    #sales-email-form .btn { width: 100%; }
+
+
+    .legal-section { padding: 60px 0 80px 0; }
+    .legal-content { padding: 30px; border-radius: 12px; }
+    .legal-content h1 { font-size: 38px; }
+    .legal-content h2 { font-size: 28px; margin-top: 40px; }
+    .legal-content h3 { font-size: 22px; margin-top: 25px; }
+    .legal-content p { font-size: 17px; margin-bottom: 1rem; }
+    .legal-content ul li { font-size: 17px; padding-left: 25px; }
+    .legal-content ul li::before { font-size: 1.1em; }
+    .legal-content .last-updated { font-size: 1rem; margin-bottom: 30px; padding-bottom: 15px;}
+
+    .faq-section { padding-top: 40px; padding-bottom: 80px; }
+    h4 { font-size: 18px; }
+    .faq-item { padding: 20px 0; }
+
+    /* Mobile-specific chat widget adjustments */
+    .chat-widget { bottom: 15px; right: 15px; }
+    .chat-icon-btn { width: 55px; height: 55px; font-size: 28px; }
+    .chat-window {
+        width: 95vw; /* Almost full width */
+        max-height: 85vh; /* Max height to leave some room */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95); /* Center and scale */
+        margin: 0;
+        border-radius: 10px; /* Keep some border radius */
+    }
+    .chat-window.open {
+        transform: translate(-50%, -50%) scale(1); /* Center and no scale */
+    }
+    .chat-header { padding: 15px; }
+    .chat-header h2 { font-size: 1.1em; }
+    .close-btn { font-size: 24px; }
+    .chat-body { padding: 15px; }
+    .message { max-width: 90%; font-size: 15px; }
+    .message p { padding: 10px 15px; border-radius: 15px; }
+    .chat-footer { padding: 10px; }
+    #chat-input { padding: 10px 15px; margin-right: 10px; }
+    #send-message-btn { padding: 10px 20px; }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 36px; line-height: 1.2; }
+    h2 { font-size: 30px; margin-bottom: 40px; }
+    h3 { font-size: 20px; }
+    p { font-size: 16px; }
+    .btn { font-size: 16px; padding: 14px 28px; }
+    .cta-button-header { font-size: 14px; padding: 10px 20px; } /* Even smaller for very small screens */
+    .hero-section, main > section { padding: 80px 0; }
+    .feature-card .icon { width: 56px; height: 56px; font-size: 28px; }
+
+    .pricing-card { padding: 30px; border-radius: 16px; }
+    .pricing-card .plan-name { font-size: 24px; margin-bottom: 15px; }
+    .pricing-card .price { font-size: 50px; margin-bottom: 20px; }
+    .pricing-card .price .period { font-size: 18px; }
+    .features-list { margin: 30px 0; }
+    .features-list li { font-size: 16px; margin-bottom: 14px;}
+    .features-list li svg { width: 20px; height: 20px; }
+    .pioneer-offer { padding: 20px; font-size: 16px !important; margin-top: 30px; }
+
+    .auth-card { border-radius: 12px; padding: 25px; }
+    .auth-card h2 { font-size: 24px; margin-bottom: 25px; }
+    .form-group label { font-size: 13px; margin-bottom: 8px; }
+    .form-group input { padding: 10px 14px; font-size: 15px; }
+
+    .legal-section { padding: 40px 0 60px 0; }
+    .legal-content { padding: 20px; border-radius: 10px; }
+
+    .faq-section { padding-top: 30px; padding-bottom: 60px; }
+    h4 { font-size: 17px; }
+    .faq-item { padding: 20px 0; }
+}
