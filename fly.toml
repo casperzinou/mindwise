@@ -37,10 +37,10 @@ kill_timeout = '5s'
   memory_mb = 1024
   min_machines_running = 1
 
-  [[services]]  
+[[services]]
   internal_port = 8080
   protocol = "tcp"
   processes = ["worker"]
   [services.ports]
     port = 8080
-    handlers = ["tcp"]+
+    handlers = ["tcp"] # <--- ENSURE NO EXTRA CHARACTERS HERE
