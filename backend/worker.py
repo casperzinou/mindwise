@@ -35,6 +35,8 @@ except Exception as e:
     embedding_model = None
     logging.error(f"Failed to configure Gemini models: {e}")
 
+logging.info("Worker application has initialized all core components and is ready to serve requests.") # <--- ADDED LINE HERE
+
 # --- SQLAlchemy Table Models ---
 # The worker needs to know the shape of our database tables.
 class User(Base):
