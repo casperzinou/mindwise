@@ -36,3 +36,11 @@ kill_timeout = '5s'
   cpus = 1
   memory_mb = 1024
   min_machines_running = 1
+
+  [[services]]  
+  internal_port = 8080
+  protocol = "tcp"
+  processes = ["worker"]
+  [services.ports]
+    port = 8080
+    handlers = ["tcp"]+
