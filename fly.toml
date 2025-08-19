@@ -10,8 +10,10 @@ kill_timeout = '5s'
   dockerfile = "backend/Dockerfile"
 
 [processes]
-  web = "gunicorn --bind :8080 --workers 1 app:app"
-  worker = "gunicorn --bind :8080 --workers 1 worker:app"
+  # Only the 'web' process is needed now, handling all operations.
+  # Using gunicorn for a production Flask application.
+  web = "gunicorn --bind :8080 --workers 1 app:app" 
+
 [http_service]
   internal_port = 8080
   force_https = true
@@ -21,26 +23,9 @@ kill_timeout = '5s'
   processes = ["web"] # Only the 'web' process should receive public traffic
 
 [[vm]]
-  # This section defines the VM for the 'web' process.
-  # Smallest, cheapest instance.
+  # This section defines the VM for the consolidated 'web' process.
+  # Increased memory to handle combined scraping, embedding, and API serving workload.
   processes = ["web"]
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 256
-
-[[vm]]
-  # This section defines the VM for the 'worker' process.
-  # Larger, more powerful instance.
-  processes = ["worker"]
-  cpu_kind = "shared"
-  cpus = 1
-  memory_mb = 1024
-  min_machines_running = 1
-
-[[services]]
-  internal_port = 8080
-  protocol = "tcp"
-  processes = ["worker"]
-  [services.ports]
-    port = 8080
-    handlers = ["http"] # 
+  memory_mb = 2048 # Critical change: Increased memory allocation to 2GB
