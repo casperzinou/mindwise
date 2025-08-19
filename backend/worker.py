@@ -143,5 +143,5 @@ def process_website():
         db_session.close()
 
 if __name__ == '__main__':
-    # This allows running the worker locally for testing
+    logging.info("Worker application starting to run Flask/Gunicorn.")
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
