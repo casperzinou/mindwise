@@ -510,10 +510,21 @@ a:hover {
     border-top: 1px solid var(--border-color);
 }
 
+/* Find this rule in your style.css */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Flexible and larger min width */
-    gap: 48px; /* More space between cards */
+    /* This is the key change: we are explicitly defining 3 columns */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 48px;
+}
+
+/* Add this new rule for mobile responsiveness */
+@media (max-width: 1024px) {
+    .features-grid {
+        /* On smaller screens, it will stack to 1 column */
+        grid-template-columns: 1fr;
+    }
+
 }
 
 .feature-card {
@@ -591,7 +602,7 @@ a:hover {
     font-weight: 900;
     color: var(--text-primary);
     margin-bottom: 32px;
-    text-align: center;
+    text-align: match-parent;
 }
 
 .pricing-card .price .period {
