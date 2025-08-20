@@ -511,20 +511,27 @@ a:hover {
 }
 
 /* Find this rule in your style.css */
+/* --- REPLACE THIS ENTIRE BLOCK in your style.css --- */
+
 .features-grid {
     display: grid;
-    /* This is the key change: we are explicitly defining 3 columns */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 48px;
+    /* On large desktops, show all 4 cards in a row */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 32px; /* Slightly smaller gap to fit 4 */
 }
 
-/* Add this new rule for mobile responsiveness */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .features-grid {
-        /* On smaller screens, it will stack to 1 column */
+        /* On tablets and smaller desktops, create a 2x2 grid */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        /* On mobile, stack them in a single column */
         grid-template-columns: 1fr;
     }
-
 }
 
 .feature-card {
@@ -583,7 +590,7 @@ a:hover {
     padding: 60px; /* More padding */
     max-width: 600px; /* Max width for card */
     width: 100%;
-    text-align: left;
+    text-align: center;
     box-shadow: var(--shadow-dark); /* Stronger shadow */
     position: relative;
     overflow: hidden;
@@ -602,7 +609,7 @@ a:hover {
     font-weight: 900;
     color: var(--text-primary);
     margin-bottom: 32px;
-    text-align: match-parent;
+    text-align: center;
 }
 
 .pricing-card .price .period {
@@ -1204,4 +1211,97 @@ footer a:hover {
     .faq-section { padding-top: 30px; padding-bottom: 60px; }
     h4 { font-size: 17px; }
     .faq-item { padding: 20px 0; }
+}
+
+/* ================================== */
+/* -- NEW PRICING SECTION STYLES -- */
+/* ================================== */
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    align-items: center; /* Aligns cards vertically */
+    margin-top: 80px;
+}
+
+.pricing-card {
+    padding: 40px; /* Standardized padding */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make cards equal height */
+}
+
+/* Specific overrides for the new design */
+.pricing-card .price {
+    font-size: 60px; /* Slightly smaller to fit new layout */
+    text-align: left; /* Re-align for new layout */
+    margin-bottom: 0;
+}
+.pricing-card .period {
+    font-size: 20px;
+}
+
+/* NEW Price Container */
+.price-container {
+    margin-bottom: 8px;
+    text-align: center;
+}
+.price-large {
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text-primary);
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.price-small {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: block;
+}
+.price-recurring {
+    font-size: 16px;
+    color: var(--text-secondary);
+    text-align: center;
+    min-height: 24px; /* Reserve space */
+    margin-bottom: 32px;
+}
+.pricing-card .features-list {
+    margin-top: 32px;
+    flex-grow: 1; /* Pushes button to bottom */
+}
+
+
+/* Recommended Plan Styling */
+.pricing-card.recommended {
+    transform: scale(1.05);
+    border: 2px solid var(--accent-green);
+    box-shadow: 0 20px 50px rgba(34, 197, 94, 0.2);
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* Responsive Grid for Pricing */
+@media (max-width: 1024px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    .pricing-card.recommended {
+        transform: scale(1); /* Disable scaling on mobile */
+    }
 }
