@@ -1,22 +1,23 @@
 /* ---------------------------------- */
 /* ----- Global Styles & Reset ---- */
 /* ---------------------------------- */
+/* --- REPLACE YOUR ENTIRE :root BLOCK WITH THIS --- */
 :root {
-    --bg-main: #0F0F0F; /* Very dark background */
-    --bg-card: #1A1A1A; /* Slightly lighter dark for cards */
-    --text-primary: #E0E0E0; /* Light text for main content */
-    --text-secondary: #A0A0A0; /* Slightly darker light text for secondary info */
+    --bg-main: #FFFFFF; /* Clean, bright white background */
+    --bg-card: #F9FAFB; /* Very light grey for cards, adds subtle depth */
+    --text-primary: #111827; /* A strong, modern off-black for headlines */
+    --text-secondary: #6B7280; /* A softer grey for paragraphs */
     
-    --accent-purple: #9333EA; /* A vibrant purple */
-    --accent-blue: #3B82F6; /* A bright blue */
-    --accent-green: #22C55E; /* A vivid green */
+    /* The NEW brand energy color */
+    --accent-vibrant: #F97316; /* A confident, energetic orange */
     
-    --gradient-start: #2A2A2A; /* Gradient start for subtle depth */
-    --gradient-end: #1A1A1A; /* Gradient end */
-
-    --border-color: #333333; /* Darker border for accents */
-    --shadow-dark: 0 8px 30px rgba(0,0,0,0.6); /* Pronounced dark shadow */
-    --shadow-subtle: 0 4px 15px rgba(0,0,0,0.3); /* Subtle dark shadow */
+    --accent-purple: #9333EA; /* Kept for gradients */
+    --accent-blue: #3B82F6; /* Kept for gradients */
+    --accent-green: #16A34A; /* A slightly richer green */
+    
+    --border-color: #E5E7EB; /* A light, clean border color */
+    --shadow-dark: 0 8px 30px rgba(0,0,0,0.1); /* Softer shadow for a light theme */
+    --shadow-subtle: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 * {
@@ -433,73 +434,61 @@ a:hover {
 /* ---------------------------------- */
 /* ----- Hero Section ------------- */
 /* ---------------------------------- */
+/* --- REPLACE ALL HERO SECTION CSS WITH THIS BLOCK --- */
+
 .hero-section {
     text-align: center;
-    padding-top: 160px; /* More vertical space */
-    padding-bottom: 160px;
+    /* REDUCED PADDING: This brings the CTA button onto the screen */
+    padding-top: 100px; 
+    padding-bottom: 120px;
     position: relative;
     overflow: hidden;
-    z-index: 2; /* Ensure hero content is above background effects */
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 900px; /* Constrain content width */
+    max-width: 900px;
     margin: 0 auto;
-    opacity: 0; /* Start hidden for animation */
-    transform: translateY(20px); /* Start slightly lower for animation */
-    animation: fadeInFromBottom 1.5s forwards 0.5s; /* Animation to reveal content */
-}
-
-@keyframes fadeInFromBottom {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-section h1 {
-    background: linear-gradient(90deg, var(--text-primary) 0%, var(--text-secondary) 100%); /* Subtle text gradient */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.0; /* Tighter line height for impact */
+    /* We no longer need the gradient text, we have a highlighted span */
+    color: var(--text-primary);
+    line-height: 1.1; /* A bit more breathing room */
+}
+
+/* NEW RULE: This styles the highlighted part of our headline */
+.hero-section h1 .highlight {
+    color: var(--accent-vibrant);
 }
 
 .hero-section .sub-headline {
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px; /* Space before button */
-    font-size: 24px;
-    line-height: 1.5;
+    max-width: 600px; /* Slightly tighter for focus */
+    margin: 24px auto 40px; /* Adjusted margins */
+    font-size: 20px;
+    line-height: 1.6;
 }
 
-.hero-section .cta-button { /* Specific style for hero CTA button (larger) */
-    margin-top: 50px;
+.hero-section .cta-button {
     font-size: 20px;
     padding: 20px 40px;
 }
 
+/* NEW GRADIENT: A light, airy, energetic background like your reference */
 .background-gradient {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 1600px; /* Larger spread */
-    height: 1000px;
-
-    /* The core of the Bolt-like background effect */
-    /* Layering multiple gradients for depth */
+    width: 1200px;
+    height: 700px;
     background:
-        /* Soft, large glow (like the blue arc on Bolt) */
-        radial-gradient(circle at 50% 70%, rgba(59, 130, 246, 0.4) 0%, transparent 60%),
-        /* Subtle, higher gradient for depth */
-        radial-gradient(circle at 40% 30%, rgba(147, 51, 234, 0.3) 0%, transparent 70%),
-        /* Dark base to ensure colors pop */
-        radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 80%);
-
-    filter: blur(150px); /* Heavy blur for softness */
-    opacity: 0.7; /* Moderate opacity */
-    z-index: 1; /* Behind hero content */
+        radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+    filter: blur(100px);
+    opacity: 0.8;
+    z-index: 1;
 }
 
 /* ---------------------------------- */
