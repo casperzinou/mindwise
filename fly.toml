@@ -7,25 +7,27 @@ kill_signal = 'SIGINT'
 kill_timeout = '5s'
 
 [build]
-  dockerfile = "backend/Dockerfile"
+  # The Dockerfile is now in the root of the project
+  dockerfile = "Dockerfile"
 
 [processes]
-  # Only the 'web' process is needed now, handling all operations.
-  # Using gunicorn for a production Flask application.
-  web = "gunicorn --bind :8080 --workers 1 app:app" 
+  # Use a production-ready gunicorn command with gevent workers for better concurrency
+  web = "gunicorn -w 4 -k gevent --bind :8080 app:app" 
 
 [http_service]
   internal_port = 8080
   force_https = true
+  
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 1 # Keep at least one web machine running
   processes = ["web"] # Only the 'web' process should receive public traffic
 
+  
+
 [[vm]]
-  # This section defines the VM for the consolidated 'web' process.
-  # Increased memory to handle combined scraping, embedding, and API serving workload.
-  processes = ["web"]
+  # This section defines the VM for the 'web' process.
+  # 2GB of memory is a great starting point.
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 2048 # Critical change: Increased memory allocation to 2GB
+  memory_mb = 2048
