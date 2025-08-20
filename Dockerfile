@@ -4,12 +4,16 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the dependencies file from the backend directory
-COPY backend/requirements.txt .
+# --- CHANGE THIS LINE ---
+# Copy the renamed dependencies file
+COPY backend/backend-requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# --- AND CHANGE THIS LINE ---
+# Install packages from the renamed file
+RUN pip install --no-cache-dir -r backend-requirements.txt
 
-# Copy the rest of the application's code from the backend directory
+# Copy the rest of the application's code
 COPY backend/ .
 
+# Expose the port the app runs on
+EXPOSE 8080
