@@ -1294,3 +1294,27 @@ footer a:hover {
         transform: scale(1); /* Disable scaling on mobile */
     }
 }
+/* --- CSS FOR THE NEW TWO-LINE CTA BUTTON --- */
+
+.cta-button {
+    /* We need to enable flexbox to stack the text */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1.3 !important; /* Adjusts spacing between the lines */
+    padding-top: 24px !important;   /* More top/bottom padding for balance */
+    padding-bottom: 24px !important;
+}
+
+.button-main-text {
+    font-size: 22px; /* Or whatever your .cta-button font-size is */
+    font-weight: 700;
+    margin-bottom: 4px; /* Space between the two lines */
+}
+
+.button-sub-text {
+    font-size: 15px;
+    font-weight: 500;
+    opacity: 0.8; /* Makes the sub-text slightly less prominent */
+}
