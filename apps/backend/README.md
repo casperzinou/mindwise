@@ -62,12 +62,44 @@ npm run test
 
 ## Deployment
 
-For deployment to Fly.io:
-1. Install Fly CLI
-2. Authenticate with Fly
-3. Create a Fly app
-4. Set secrets
-5. Deploy with `fly deploy`
+### Deploy to Fly.io
+
+1. Install Fly CLI:
+   ```bash
+   # macOS
+   brew install flyctl
+   
+   # Windows
+   iwr https://fly.io/install.ps1 -useb | iex
+   
+   # Linux
+   curl -L https://fly.io/install.sh | sh
+   ```
+
+2. Authenticate with Fly:
+   ```bash
+   fly auth login
+   ```
+
+3. Launch the app (if not already created):
+   ```bash
+   fly launch
+   ```
+
+4. Set secrets:
+   ```bash
+   fly secrets set SUPABASE_URL=your_supabase_project_url
+   fly secrets set SUPABASE_SERVICE_KEY=your_supabase_service_key
+   fly secrets set SUPABASE_ANON_KEY=your_supabase_anon_key
+   fly secrets set GEMINI_API_KEY=your_gemini_api_key
+   ```
+
+5. Deploy:
+   ```bash
+   fly deploy
+   ```
+
+The `fly.toml` file in this directory contains the configuration for Fly.io deployment.
 
 ## Available Scripts
 
