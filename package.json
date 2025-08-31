@@ -23,5 +23,8 @@
     "typescript"
   ],
   "author": "Mindwise Team",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "dotenv": "^17.2.1"
+  }
 }
