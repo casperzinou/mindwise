@@ -1,0 +1,27 @@
+{
+  "name": "mindwise",
+  "version": "1.0.0",
+  "description": "Mindwise AI Chatbot Platform - Turn Your Website into a 24/7 Sales and Support Agent",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test": "npm run test:frontend && npm run test:backend"
+  },
+  "keywords": [
+    "ai",
+    "chatbot",
+    "nextjs",
+    "express",
+    "supabase",
+    "typescript"
+  ],
+  "author": "Mindwise Team",
+  "license": "MIT"
+}
