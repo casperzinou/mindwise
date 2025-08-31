@@ -24,6 +24,7 @@ This monorepo contains three main applications:
 
 - Node.js (v16 or higher)
 - npm or yarn
+- Docker (optional, for containerized development)
 - Supabase account with pgvector extension enabled
 - Google Gemini API key (for embeddings)
 
@@ -38,9 +39,25 @@ npm install
 
 ### Environment Variables
 
-Each application requires its own environment variables. See the README files in each app directory for specific setup instructions.
+Create a `.env` file from the example:
+```bash
+cp .env.example .env
+```
 
-### Development
+Then update the variables in the `.env` file with your actual values.
+
+### Development with Docker (Recommended)
+
+Start both frontend and backend services:
+```bash
+docker-compose up
+```
+
+Access the applications:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001/api
+
+### Development without Docker
 
 Start the frontend:
 ```bash
@@ -52,12 +69,21 @@ Start the backend:
 npm run dev:backend
 ```
 
-## Deployment
+## CI/CD
 
-See the individual app README files for deployment instructions:
+This repository uses GitHub Actions for continuous integration and continuous deployment:
 
-- [Frontend Deployment](./apps/frontend/README.md)
-- [Backend Deployment](./apps/backend/README.md)
+1. **Frontend CI/CD** (`/.github/workflows/frontend.yml`):
+   - Runs tests on pull requests
+   - Builds and deploys to Cloudflare Pages on main branch pushes
+
+2. **Backend CI/CD** (`/.github/workflows/backend.yml`):
+   - Runs tests on pull requests
+   - Builds and deploys to Fly.io on main branch pushes
+
+3. **Monorepo CI** (`/.github/workflows/monorepo.yml`):
+   - Runs linting and security audits on all code
+   - Runs tests for all applications
 
 ## Testing
 
@@ -70,6 +96,28 @@ Run tests for a specific application:
 ```bash
 npm run test:frontend
 npm run test:backend
+```
+
+## Deployment
+
+### Frontend Deployment
+The frontend is configured for deployment to Cloudflare Pages. Set up the following secrets in your GitHub repository:
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+### Backend Deployment
+The backend is configured for deployment to Fly.io. Set up the following secret in your GitHub repository:
+- `FLY_API_TOKEN`
+
+## Docker Images
+
+Dockerfiles are provided for both frontend and backend applications:
+- `apps/frontend/Dockerfile`
+- `apps/backend/Dockerfile`
+
+Build and run with docker-compose:
+```bash
+docker-compose up --build
 ```
 
 ## License
