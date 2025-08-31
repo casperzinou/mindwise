@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
+    "langchain/text_splitter": "npm:langchain@0.2.1/text_splitter",
+    "npm:cheerio@1.0.0-rc.12": "https://esm.sh/cheerio@1.0.0-rc.12"
+  }
+}

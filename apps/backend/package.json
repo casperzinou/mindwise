@@ -1,0 +1,47 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start-no-processor": "node dist/index-no-processor.js",
+    "dev": "tsx watch src/index.ts",
+    "dev-no-processor": "tsx watch src/index-no-processor.ts",
+    "job-processor": "tsx src/services/jobProcessor.ts",
+    "cleanup": "tsx src/utils/cleanup.ts",
+    "user-cleanup": "tsx src/utils/userCleanup.ts",
+    "test-chat": "tsx src/test/chatTest.ts",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@langchain/community": "^0.3.53",
+    "@supabase/supabase-js": "^2.56.0",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "franc": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^24.3.0",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.4.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

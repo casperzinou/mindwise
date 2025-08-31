@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .instructions {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot Widget Test</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>This page tests the Mindwise chatbot widget integration.</p>
+            <p>To use this test:</p>
+            <ol>
+                <li>Make sure your Mindwise backend is running on port 3001</li>
+                <li>Replace "YOUR_BOT_ID_HERE" with your actual bot ID</li>
+                <li>Open browser dev tools (F12) to monitor console and network activity</li>
+                <li>Refresh the page and check if the widget loads</li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h3>Widget Configuration</h3>
+            <p>Current widget configuration:</p>
+            <div class="result" id="config-result">
+                <pre id="config-display"></pre>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Widget Status</h3>
+            <p>Checking if widget is loaded:</p>
+            <button class="test-button" onclick="checkWidgetStatus()">Check Widget Status</button>
+            <div class="result" id="status-result">
+                Click the button above to check widget status.
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>API Test</h3>
+            <p>Testing API connectivity:</p>
+            <button class="test-button" onclick="testApiConnectivity()">Test API Connectivity</button>
+            <div class="result" id="api-result">
+                Click the button above to test API connectivity.
+            </div>
+        </div>
+    </div>
+
+    <!-- Mindwise Chatbot Widget -->
+    <script>
+        // Configure the chatbot
+        window.mindwiseBot = { 
+            botId: "b2590fca-a443-4024-8e69-cd5f4d377cce", // Replace with your actual bot ID
+            apiUrl: "http://localhost:3001/api"
+        };
+        
+        // Display current configuration
+        document.getElementById('config-display').textContent = JSON.stringify(window.mindwiseBot, null, 2);
+        
+        // Load the chatbot widget
+        (function(){
+            var s = document.createElement('script');
+            s.src = 'http://localhost:3001/mindwise-chat.js';
+            s.onload = function() {
+                console.log('[Widget Test]: Widget script loaded successfully');
+            };
+            s.onerror = function() {
+                console.error('[Widget Test]: Error loading widget script');
+            };
+            document.head.appendChild(s);
+        })();
+    </script>
+    <!-- End Mindwise Chatbot Widget -->
+    
+    <script>
+        // Test functions
+        function checkWidgetStatus() {
+            const resultElement = document.getElementById('status-result');
+            
+            try {
+                // Check if widget elements exist in DOM
+                const chatContainer = document.getElementById('mindwise-chat-container');
+                const toggleButton = document.getElementById('mindwise-toggle-btn');
+                
+                if (chatContainer && toggleButton) {
+                    resultElement.innerHTML = '<span style="color: green;">✓ Widget elements found in DOM</span>';
+                    resultElement.className = 'result success';
+                    
+                    // Check visibility
+                    const isContainerVisible = window.getComputedStyle(chatContainer).display !== 'none';
+                    const isToggleVisible = window.getComputedStyle(toggleButton).display !== 'none';
+                    
+                    resultElement.innerHTML += `<br>Chat Container Visible: ${isContainerVisible}`;
+                    resultElement.innerHTML += `<br>Toggle Button Visible: ${isToggleVisible}`;
+                } else {
+                    resultElement.innerHTML = '<span style="color: red;">✗ Widget elements not found in DOM</span>';
+                    resultElement.className = 'result error';
+                    
+                    // Check if script is loaded
+                    const widgetScript = document.querySelector('script[src*="mindwise-chat.js"]');
+                    if (widgetScript) {
+                        resultElement.innerHTML += '<br><span style="color: green;">✓ Widget script is loaded</span>';
+                    } else {
+                        resultElement.innerHTML += '<br><span style="color: red;">✗ Widget script is not loaded</span>';
+                    }
+                }
+            } catch (error) {
+                resultElement.innerHTML = `<span style="color: red;">✗ Error checking widget status: ${error.message}</span>`;
+                resultElement.className = 'result error';
+            }
+        }
+        
+        function testApiConnectivity() {
+            const resultElement = document.getElementById('api-result');
+            
+            if (!window.mindwiseBot || !window.mindwiseBot.botId) {
+                resultElement.innerHTML = '<span style="color: red;">✗ Widget configuration not found or botId missing</span>';
+                resultElement.className = 'result error';
+                return;
+            }
+            
+            const botId = window.mindwiseBot.botId;
+            const apiUrl = window.mindwiseBot.apiUrl || 'http://localhost:3001/api';
+            
+            resultElement.innerHTML = 'Testing API connectivity...';
+            resultElement.className = 'result';
+            
+            // Test chatbot info endpoint
+            fetch(`${apiUrl}/chatbot/${botId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                })
+                .then(data => {
+                    resultElement.innerHTML = `<span style="color: green;">✓ API connectivity successful</span><br>Bot Info: ${JSON.stringify(data, null, 2)}`;
+                    resultElement.className = 'result success';
+                })
+                .catch(error => {
+                    resultElement.innerHTML = `<span style="color: red;">✗ API connectivity failed: ${error.message}</span>`;
+                    resultElement.className = 'result error';
+                });
+        }
+        
+        // Log when page loads
+        window.addEventListener('load', function() {
+            console.log('[Widget Test Page]: Page loaded');
+            console.log('[Widget Test Page]: Widget configuration:', window.mindwiseBot);
+        });
+    </script>
+</body>
+</html>
