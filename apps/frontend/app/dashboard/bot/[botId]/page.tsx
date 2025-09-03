@@ -7,7 +7,10 @@ import { API_BASE_URL } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
-import { ArrowLeft, Trash2 } from 'lucide-react'; // Import Trash2 icon
+import { ArrowLeft, Trash2, Copy } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 type Chatbot = {
   id: string;
@@ -16,42 +19,33 @@ type Chatbot = {
 };
 
 export default function BotManagementPage() {
-  const [bot, setBot] = useState<Chatbot | null>(null);
-  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [deleting, setDeleting] = useState(false); // State for delete operation
-  const [error, setError] = useState<string | null>(null); // State for errors
   const params = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const botId = params.botId as string;
 
-  useEffect(() => {
-    if (!botId) return;
+  // Fetch bot data
+  const { data: bot, isLoading, isError, error } = useQuery({
+    queryKey: ['bot', botId],
+    queryFn: async () => {
+      if (!botId) throw new Error('Bot ID is required');
+      
+      const { data, error } = await supabase
+        .from('chatbots')
+        .select('id, name, website_url')
+        .eq('id', botId)
+        .single();
 
-    const fetchBotData = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('chatbots')
-          .select('id, name, website_url')
-          .eq('id', botId)
-          .single();
-
-        if (error || !data) {
-          console.error('Error fetching bot data:', error);
-          router.push('/dashboard');
-        } else {
-          setBot(data);
-        }
-      } catch (err) {
-        console.error('Error fetching bot data:', err);
-        router.push('/dashboard');
-      } finally {
-        setLoading(false);
+      if (error || !data) {
+        throw new Error(error?.message || 'Bot not found');
       }
-    };
-
-    fetchBotData();
-  }, [botId, router]);
+      
+      return data;
+    },
+    enabled: !!botId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   // Shorter embed code with loader
   const embedCode = bot ? `<!-- Mindwise Chatbot -->
@@ -64,7 +58,7 @@ export default function BotManagementPage() {
 </script>
 <!-- Powered by Mindwise -->` : '';
 
-  function handleCopy() {
+  const handleCopy = () => {
     if (embedCode) {
       navigator.clipboard.writeText(embedCode);
       setCopied(true);
@@ -72,40 +66,64 @@ export default function BotManagementPage() {
     }
   };
 
-  // --- NEW: FUNCTION TO HANDLE DELETION ---
-  const handleDelete = async () => {
+  // Mutation for deleting bot
+  const { mutate: deleteBot, isPending: isDeleting, isError: isDeleteError, error: deleteError, isSuccess: isDeleteSuccess } = useMutation({
+    mutationFn: async () => {
+      if (!bot) throw new Error('Bot not found');
+      
+      const response = await fetch(`${API_BASE_URL}/api/bot/${bot.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete the bot.');
+      }
+      
+      return true;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch chatbots query
+      queryClient.invalidateQueries({ queryKey: ['chatbots'] });
+      
+      // Redirect to dashboard
+      router.push('/dashboard');
+    },
+    onError: (error) => {
+      console.error('Error deleting bot:', error);
+    }
+  });
+
+  // Handle delete confirmation
+  const handleDelete = () => {
     if (!bot) return;
 
     const isConfirmed = window.confirm(`Are you sure you want to delete the bot "${bot.name}"? This action cannot be undone.`);
 
     if (isConfirmed) {
-      setDeleting(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/bot/${bot.id}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to delete the bot.');
-        }
-
-        // On successful deletion, redirect to the dashboard
-        router.push('/dashboard');
-
-      } catch (err) {
-        const error = err as Error;
-        setError(error.message);
-        setDeleting(false);
-      }
+      deleteBot();
     }
   };
 
-  if (loading) {
+  // Handle loading state
+  if (isLoading) {
     return <div className="flex justify-center items-center min-h-screen">Loading Bot Details...</div>;
   }
 
+  // Handle error state
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Error Loading Bot</h2>
+          <p className="text-gray-600">{error instanceof Error ? error.message : 'An unknown error occurred'}</p>
+          <Button onClick={() => router.push('/dashboard')} className="mt-4">Back to Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle not found
   if (!bot) {
     return <div className="flex justify-center items-center min-h-screen">Bot not found. Redirecting...</div>;
   }
@@ -131,24 +149,54 @@ export default function BotManagementPage() {
                 Copy and paste this snippet into the {`<head>`} section of your website{`'`}s HTML file.
               </p>
               <div className="relative bg-gray-900 text-white rounded-md p-4 font-mono text-sm">
-                <Button variant="ghost" size="sm" className="absolute top-2 right-2 text-white hover:bg-gray-700" onClick={handleCopy} disabled={!embedCode}>
-                  {copied ? 'Copied!' : 'Copy'}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="absolute top-2 right-2 text-white hover:bg-gray-700" 
+                  onClick={handleCopy} 
+                  disabled={!embedCode}
+                >
+                  {copied ? (
+                    <>
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-2 h-4 w-4" />
+                      Copy
+                    </>
+                  )}
                 </Button>
                 <pre><code>{embedCode || 'Loading embed code...'}</code></pre>
               </div>
             </div>
             
-            {/* --- NEW: DELETE SECTION --- */}
+            {/* Delete Section */}
             <div className="border-t pt-6">
               <h3 className="font-semibold text-red-600">Danger Zone</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Deleting your chatbot is a permanent action and cannot be undone. This will remove all associated data.
               </p>
-              <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+              
+              {isDeleteError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>
+                    {deleteError instanceof Error ? deleteError.message : 'Failed to delete bot'}
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              <Button 
+                variant="destructive" 
+                onClick={handleDelete} 
+                disabled={isDeleting}
+              >
                 <Trash2 className="mr-2 h-4 w-4" />
-                {deleting ? 'Deleting...' : 'Delete this Bot'}
+                {isDeleting ? 'Deleting...' : 'Delete this Bot'}
               </Button>
-              {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
             </div>
           </CardContent>
         </Card>

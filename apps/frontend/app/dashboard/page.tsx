@@ -7,6 +7,9 @@ import type { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type Chatbot = {
   id: string;
@@ -17,8 +20,6 @@ type Chatbot = {
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
-  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -26,48 +27,93 @@ export default function DashboardPage() {
     router.push('/auth');
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  // Fetch user data
+  const { data: userData, isLoading: userLoading, isError: userError } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      return session;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
 
-      if (!session) {
-        router.push('/auth');
-        return;
-      }
-
-      setUser(session.user);
-
-      // Fetch user profile
-      const { data: userProfile } = await supabase
+  // Fetch user profile
+  const { data: userProfile, isLoading: profileLoading } = useQuery({
+    queryKey: ['userProfile', userData?.user?.id],
+    queryFn: async () => {
+      if (!userData?.user?.id) return null;
+      const { data } = await supabase
         .from('users')
         .select('full_name')
-        .eq('id', session.user.id)
+        .eq('id', userData.user.id)
         .single();
+      return data;
+    },
+    enabled: !!userData?.user?.id,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
 
+  // Fetch user's chatbots
+  const { data: chatbots, isLoading: chatbotsLoading, isError: chatbotsError, error: chatbotsFetchError } = useQuery({
+    queryKey: ['chatbots', userData?.user?.id],
+    queryFn: async () => {
+      if (!userData?.user?.id) return [];
+      const { data, error } = await supabase
+        .from('chatbots')
+        .select('id, name, created_at')
+        .eq('user_id', userData.user.id);
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      return data || [];
+    },
+    enabled: !!userData?.user?.id,
+    staleTime: 30 * 1000, // 30 seconds
+  });
+
+  // Update user state when userData changes
+  useEffect(() => {
+    if (userData?.user) {
+      setUser(userData.user);
       if (userProfile) {
         setFullName(userProfile.full_name);
       }
+    } else if (userData === null) {
+      router.push('/auth');
+    }
+  }, [userData, userProfile, router]);
 
-      // Fetch user's chatbots
-      const { data: chatbotData, error: chatbotError } = await supabase
-        .from('chatbots')
-        .select('id, name, created_at')
-        .eq('user_id', session.user.id);
+  // Handle user loading state
+  if (userLoading || profileLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-      if (chatbotError) {
-        console.error('Error fetching chatbots:', chatbotError);
-      } else if (chatbotData) {
-        setChatbots(chatbotData);
-      }
-
-      setLoading(false);
-    };
-
-    fetchUserData();
-  }, [router]);
-
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+  // Handle user error state
+  if (userError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            Failed to load user data. Please try refreshing the page.
+          </AlertDescription>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            Refresh Page
+          </Button>
+        </Alert>
+      </div>
+    );
   }
 
   if (user) {
@@ -88,10 +134,30 @@ export default function DashboardPage() {
           </header>
           <main className="border-t pt-8">
             <h2 className="text-xl font-semibold mb-4">Your Chatbots</h2>
-            {chatbots.length > 0 ? (
+            
+            {chatbotsLoading ? (
+              <div className="flex justify-center items-center py-16">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            ) : chatbotsError ? (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  Failed to load chatbots: {chatbotsFetchError?.message || 'Unknown error'}
+                </AlertDescription>
+                <Button 
+                  onClick={() => window.location.reload()} 
+                  variant="outline" 
+                  className="mt-4"
+                >
+                  Retry
+                </Button>
+              </Alert>
+            ) : chatbots && chatbots.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {chatbots.map((bot) => (
-                  <Card key={bot.id}>
+                  <Card key={bot.id} className="hover:shadow-md transition-shadow">
                     <CardHeader>
                       <CardTitle>{bot.name}</CardTitle>
                     </CardHeader>

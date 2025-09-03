@@ -15,7 +15,8 @@ CREATE TABLE chatbots (
     website_url TEXT,
     support_email TEXT,
     configuration_details JSONB,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE jobs (
@@ -57,8 +58,17 @@ CREATE TABLE translation_cache (
 
 -- Add indexes for better query performance
 CREATE INDEX idx_chatbots_user_id ON chatbots(user_id);
+CREATE INDEX idx_chatbots_created_at ON chatbots(created_at);
 CREATE INDEX idx_jobs_bot_id ON jobs(bot_id);
 CREATE INDEX idx_jobs_status ON jobs(status);
+CREATE INDEX idx_jobs_created_at ON jobs(created_at);
 CREATE INDEX idx_content_pipeline_status ON content_pipeline(status);
+CREATE INDEX idx_content_pipeline_created_at ON content_pipeline(created_at);
 CREATE INDEX idx_documents_bot_id ON documents(bot_id);
+CREATE INDEX idx_documents_created_at ON documents(created_at);
 CREATE INDEX idx_translation_cache_lookup ON translation_cache(source_text, source_language, target_language);
+CREATE INDEX idx_translation_cache_created_at ON translation_cache(created_at);
+
+-- Composite indexes for common query patterns
+CREATE INDEX idx_jobs_bot_id_status ON jobs(bot_id, status);
+CREATE INDEX idx_documents_bot_id_created_at ON documents(bot_id, created_at);

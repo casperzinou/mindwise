@@ -10,17 +10,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function CreateBotPage() {
   const [botName, setBotName] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [supportEmail, setSupportEmail] = useState('');
   const [botPersonality, setBotPersonality] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // Validation functions
   const validateUrl = (url: string): boolean => {
@@ -39,79 +38,59 @@ export default function CreateBotPage() {
 
   const validateForm = (): boolean => {
     if (!botName.trim()) {
-      setError('Please enter a bot name.');
       return false;
     }
 
     if (!websiteUrl.trim()) {
-      setError('Please enter a website URL.');
       return false;
     }
 
     if (!validateUrl(websiteUrl)) {
-      setError('Please enter a valid website URL (e.g., https://www.example.com).');
       return false;
     }
 
     if (!supportEmail.trim()) {
-      setError('Please enter a support email.');
       return false;
     }
 
     if (!validateEmail(supportEmail)) {
-      setError('Please enter a valid email address.');
       return false;
     }
 
     if (botPersonality && botPersonality.length > 1000) {
-      setError('Personality description must be less than 1000 characters.');
       return false;
     }
 
     return true;
   };
 
-  const handleCreateBot = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
+  // Mutation for creating bot
+  const { mutate: createBot, isPending, isError, error, isSuccess } = useMutation({
+    mutationFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
 
-    // Validate form
-    if (!validateForm()) {
-      setLoading(false);
-      return;
-    }
+      if (!user) {
+        throw new Error('You must be logged in to create a bot.');
+      }
 
-    const { data: { user } } = await supabase.auth.getUser();
+      // 1. Insert the new bot and get its ID back from Supabase
+      const { data: newBot, error: insertError } = await supabase
+        .from('chatbots')
+        .insert({
+          name: botName,
+          user_id: user.id,
+          website_url: websiteUrl,
+          support_email: supportEmail,
+          configuration_details: { personality: botPersonality }
+        })
+        .select()
+        .single();
 
-    if (!user) {
-      setError('You must be logged in to create a bot.');
-      setLoading(false);
-      return;
-    }
+      if (insertError) {
+        throw new Error(`Failed to create bot: ${insertError.message}`);
+      }
 
-    // 1. Insert the new bot and get its ID back from Supabase
-    const { data: newBot, error: insertError } = await supabase
-      .from('chatbots')
-      .insert({
-        name: botName,
-        user_id: user.id,
-        website_url: websiteUrl,
-        support_email: supportEmail,
-        configuration_details: { personality: botPersonality }
-      })
-      .select()
-      .single();
-
-    if (insertError) {
-      setError(`Failed to create bot: ${insertError.message}`);
-      setLoading(false);
-      return;
-    }
-
-    // 2. If the insert was successful, call our backend to start the scrape
-    try {
+      // 2. If the insert was successful, call our backend to start the scrape
       const response = await fetch(`${API_BASE_URL}/api/scrape`, {
         method: 'POST',
         headers: {
@@ -125,20 +104,31 @@ export default function CreateBotPage() {
         throw new Error(errorData.error || 'Failed to start scraping process.');
       }
 
-      // 3. If everything is successful, show success message
-      setSuccess('Bot created successfully! Training has started and may take a few minutes to complete.');
+      return newBot;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch chatbots query
+      queryClient.invalidateQueries({ queryKey: ['chatbots'] });
       
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         router.push('/dashboard');
       }, 3000);
-
-    } catch (apiError) {
-      const error = apiError as Error;
-      setError(`Bot created, but failed to start training. Error: ${error.message}`);
+    },
+    onError: (error) => {
+      console.error('Error creating bot:', error);
     }
+  });
 
-    setLoading(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    createBot();
   };
 
   return (
@@ -149,7 +139,7 @@ export default function CreateBotPage() {
           <CardDescription>Enter the website to train your bot on.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreateBot}>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="bot-name">Bot Name</Label>
@@ -159,7 +149,7 @@ export default function CreateBotPage() {
                   value={botName} 
                   onChange={(e) => setBotName(e.target.value)} 
                   required 
-                  disabled={loading}
+                  disabled={isPending}
                 />
               </div>
               <div className="grid gap-2">
@@ -171,7 +161,7 @@ export default function CreateBotPage() {
                   value={websiteUrl} 
                   onChange={(e) => setWebsiteUrl(e.target.value)} 
                   required 
-                  disabled={loading}
+                  disabled={isPending}
                 />
               </div>
               <div className="grid gap-2">
@@ -183,7 +173,7 @@ export default function CreateBotPage() {
                   value={supportEmail} 
                   onChange={(e) => setSupportEmail(e.target.value)} 
                   required 
-                  disabled={loading}
+                  disabled={isPending}
                 />
               </div>
               <div className="grid gap-2">
@@ -194,7 +184,7 @@ export default function CreateBotPage() {
                   value={botPersonality} 
                   onChange={(e) => setBotPersonality(e.target.value)} 
                   rows={4} 
-                  disabled={loading}
+                  disabled={isPending}
                   maxLength={1000}
                 />
                 {botPersonality && (
@@ -204,23 +194,28 @@ export default function CreateBotPage() {
                 )}
               </div>
               
-              {error && (
+              {isError && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>
+                    {error instanceof Error ? error.message : 'An unknown error occurred'}
+                  </AlertDescription>
                 </Alert>
               )}
               
-              {success && (
+              {isSuccess && (
                 <Alert variant="default" className="border-green-500 text-green-700">
+                  <CheckCircle className="h-4 w-4" />
                   <AlertTitle>Success</AlertTitle>
-                  <AlertDescription>{success}</AlertDescription>
+                  <AlertDescription>
+                    Bot created successfully! Training has started and may take a few minutes to complete. Redirecting to dashboard...
+                  </AlertDescription>
                 </Alert>
               )}
               
-              <Button type="submit" disabled={loading}>
-                {loading ? 'Creating...' : 'Create & Start Training'}
+              <Button type="submit" disabled={isPending || !validateForm()}>
+                {isPending ? 'Creating...' : 'Create & Start Training'}
               </Button>
             </div>
           </form>

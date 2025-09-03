@@ -1,1 +1,118 @@
-"import dotenv from 'dotenv';\nimport fs from 'fs';\nimport path from 'path';\n\ndotenv.config();\n\n// Define log levels\nexport type LogLevel = 'error' | 'warn' | 'info' | 'debug';\n\n// Define log entry structure\ninterface LogEntry {\n  level: LogLevel;\n  timestamp: string;\n  message: string;\n  meta?: any;\n}\n\n// Get log level from environment or default to 'info'\nconst currentLogLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info';\n\n// Define log level priorities\nconst logLevelPriorities: Record<LogLevel, number> = {\n  error: 0,\n  warn: 1,\n  info: 2,\n  debug: 3,\n};\n\n// Check if we should log based on the current log level\nfunction shouldLog(level: LogLevel): boolean {\n  return logLevelPriorities[level] <= logLevelPriorities[currentLogLevel];\n}\n\n// Format log entry\nfunction formatLogEntry(level: LogLevel, message: string, meta?: any): string {\n  const timestamp = new Date().toISOString();\n  const logEntry: LogEntry = {\n    level,\n    timestamp,\n    message,\n    meta,\n  };\n  \n  return JSON.stringify(logEntry);\n}\n\n// Write log to file\nfunction writeToFile(logEntry: string): void {\n  // Ensure logs directory exists\n  const logsDir = path.join(__dirname, '..', '..', 'logs');\n  if (!fs.existsSync(logsDir)) {\n    fs.mkdirSync(logsDir, { recursive: true });\n  }\n  \n  // Write to log file\n  const logFile = path.join(logsDir, `${new Date().toISOString().split('T')[0]}.log`);\n  fs.appendFileSync(logFile, logEntry + '\\n');\n}\n\n// Log to console\nfunction logToConsole(level: LogLevel, message: string, meta?: any): void {\n  const timestamp = new Date().toISOString();\n  const logMessage = `[${timestamp}] ${level.toUpperCase()}: ${message}`;\n  \n  switch (level) {\n    case 'error':\n      console.error(logMessage, meta || '');\n      break;\n    case 'warn':\n      console.warn(logMessage, meta || '');\n      break;\n    case 'info':\n      console.info(logMessage, meta || '');\n      break;\n    case 'debug':\n      console.debug(logMessage, meta || '');\n      break;\n  }\n}\n\n// Main logging function\nexport function log(level: LogLevel, message: string, meta?: any): void {\n  // Check if we should log based on the current log level\n  if (!shouldLog(level)) {\n    return;\n  }\n  \n  // Format the log entry\n  const formattedLog = formatLogEntry(level, message, meta);\n  \n  // Log to console\n  logToConsole(level, message, meta);\n  \n  // Write to file if enabled\n  if (process.env.LOG_TO_FILE === 'true') {\n    try {\n      writeToFile(formattedLog);\n    } catch (error) {\n      console.error('Failed to write to log file:', error);\n    }\n  }\n}\n\n// Convenience functions for each log level\nexport function error(message: string, meta?: any): void {\n  log('error', message, meta);\n}\n\nexport function warn(message: string, meta?: any): void {\n  log('warn', message, meta);\n}\n\nexport function info(message: string, meta?: any): void {\n  log('info', message, meta);\n}\n\nexport function debug(message: string, meta?: any): void {\n  log('debug', message, meta);\n}\n\nexport default {\n  error,\n  warn,\n  info,\n  debug,\n};"
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+
+dotenv.config();
+
+// Define log levels
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+
+// Define log entry structure
+interface LogEntry {
+  level: LogLevel;
+  timestamp: string;
+  message: string;
+  meta?: any;
+  service?: string;
+}
+
+// Get log level from environment or default to 'info'
+const currentLogLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info';
+const serviceName: string = process.env.SERVICE_NAME || 'mindwise-backend';
+
+// Define log level priorities
+const logLevelPriorities: Record<LogLevel, number> = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  debug: 3,
+};
+
+// Check if we should log based on the current log level
+function shouldLog(level: LogLevel): boolean {
+  return logLevelPriorities[level] <= logLevelPriorities[currentLogLevel];
+}
+
+// Format log entry with better structure
+function formatLogEntry(level: LogLevel, message: string, meta?: any): string {
+  const timestamp = new Date().toISOString();
+  const logEntry: LogEntry = {
+    level,
+    timestamp,
+    message,
+    meta,
+    service: serviceName
+  };
+  
+  // For development, use human-readable format
+  if (process.env.NODE_ENV === 'development') {
+    return `[${timestamp}] [${serviceName}] ${level.toUpperCase()}: ${message} ${meta ? JSON.stringify(meta) : ''}`;
+  }
+  
+  // For production, use JSON format
+  return JSON.stringify(logEntry);
+}
+
+// Write log to file
+function writeToFile(logEntry: string): void {
+  // Ensure logs directory exists
+  const logsDir = path.join(__dirname, '..', '..', 'logs');
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+  
+  // Write to log file
+  const logFile = path.join(logsDir, `${new Date().toISOString().split('T')[0]}.log`);
+  fs.appendFileSync(logFile, logEntry + '\n');
+}
+
+// Log to console
+function logToConsole(level: LogLevel, message: string, meta?: any): void {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [${serviceName}] ${level.toUpperCase()}: ${message}`;
+  
+  switch (level) {
+    case 'error':
+      console.error(logMessage, meta || '');
+      break;
+    case 'warn':
+      console.warn(logMessage, meta || '');
+      break;
+    case 'info':
+      console.info(logMessage, meta || '');
+      break;
+    case 'debug':
+      console.debug(logMessage, meta || '');
+      break;
+    default:
+      console.log(logMessage, meta || '');
+  }
+}
+
+// Main logging function
+function log(level: LogLevel, message: string, meta?: any): void {
+  if (!shouldLog(level)) {
+    return;
+  }
+  
+  const formattedLog = formatLogEntry(level, message, meta);
+  
+  // Write to file
+  try {
+    writeToFile(formattedLog);
+  } catch (error) {
+    // If we can't write to file, log to console
+    console.error('Failed to write to log file:', error);
+  }
+  
+  // Log to console
+  logToConsole(level, message, meta);
+}
+
+// Export individual log functions
+export default {
+  error: (message: string, meta?: any) => log('error', message, meta),
+  warn: (message: string, meta?: any) => log('warn', message, meta),
+  info: (message: string, meta?: any) => log('info', message, meta),
+  debug: (message: string, meta?: any) => log('debug', message, meta),
+};

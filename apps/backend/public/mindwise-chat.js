@@ -6,24 +6,78 @@
   const botId = config.botId;
   const apiUrl = config.apiUrl || 'http://localhost:3001/api';
   
+  // Widget customization options
+  const widgetConfig = {
+    title: config.title || 'Chat Assistant',
+    position: config.position || 'bottom-right', // 'bottom-right', 'bottom-left', 'top-right', 'top-left'
+    theme: config.theme || 'blue', // 'blue', 'green', 'purple', 'custom'
+    customTheme: config.customTheme || {}, // Custom theme colors
+    width: config.width || 350,
+    height: config.height || 500,
+    primaryColor: config.primaryColor || '#2563EB',
+    showBranding: config.showBranding !== false, // Default to true
+    greetingMessage: config.greetingMessage || null
+  };
+  
   if (!botId) {
     console.error('[Mindwise Chatbot]: botId is required');
     return;
   }
   
+  // Theme configurations
+  const themes = {
+    blue: {
+      primary: '#2563EB',
+      primaryHover: '#1D4ED8',
+      headerBg: '#2563EB'
+    },
+    green: {
+      primary: '#10B981',
+      primaryHover: '#059669',
+      headerBg: '#10B981'
+    },
+    purple: {
+      primary: '#8B5CF6',
+      primaryHover: '#7C3AED',
+      headerBg: '#8B5CF6'
+    }
+  };
+  
+  // Get current theme
+  const currentTheme = widgetConfig.theme === 'custom' ? 
+    { ...themes.blue, ...widgetConfig.customTheme } : 
+    themes[widgetConfig.theme] || themes.blue;
+  
   // State variables
   let chatbotInfo = null;
   let isChatOpen = false;
+  let isInitialized = false;
   
   // Create chatbot container
   const chatContainer = document.createElement('div');
   chatContainer.id = 'mindwise-chat-container';
+  
+  // Set position based on configuration
+  let positionStyles = '';
+  switch (widgetConfig.position) {
+    case 'bottom-left':
+      positionStyles = `bottom: 20px; left: 20px;`;
+      break;
+    case 'top-right':
+      positionStyles = `top: 20px; right: 20px;`;
+      break;
+    case 'top-left':
+      positionStyles = `top: 20px; left: 20px;`;
+      break;
+    default: // bottom-right
+      positionStyles = `bottom: 20px; right: 20px;`;
+  }
+  
   chatContainer.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    height: 500px;
+    ${positionStyles}
+    width: ${widgetConfig.width}px;
+    height: ${widgetConfig.height}px;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -33,12 +87,13 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     z-index: 10000;
     overflow: hidden;
+    transition: all 0.3s ease;
   `;
   
   // Create chat header
   const chatHeader = document.createElement('div');
   chatHeader.style.cssText = `
-    background: #2563EB;
+    background: ${currentTheme.headerBg};
     color: white;
     padding: 16px;
     display: flex;
@@ -46,7 +101,7 @@
     align-items: center;
   `;
   chatHeader.innerHTML = `
-    <div style="font-weight: 600; font-size: 16px;">Chat Assistant</div>
+    <div style="font-weight: 600; font-size: 16px;">${widgetConfig.title}</div>
     <button id="mindwise-close-btn" style="
       background: none;
       border: none;
@@ -104,8 +159,8 @@
   `;
   
   chatInput.addEventListener('focus', () => {
-    chatInput.style.borderColor = '#2563EB';
-    chatInput.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)';
+    chatInput.style.borderColor = currentTheme.primary;
+    chatInput.style.boxShadow = `0 0 0 3px ${currentTheme.primary}20`;
   });
   
   chatInput.addEventListener('blur', () => {
@@ -117,7 +172,7 @@
   const sendButton = document.createElement('button');
   sendButton.textContent = 'Send';
   sendButton.style.cssText = `
-    background: #2563EB;
+    background: ${currentTheme.primary};
     color: white;
     border: none;
     border-radius: 20px;
@@ -130,11 +185,11 @@
   `;
   
   sendButton.addEventListener('mouseenter', () => {
-    sendButton.style.background = '#1D4ED8';
+    sendButton.style.background = currentTheme.primaryHover;
   });
   
   sendButton.addEventListener('mouseleave', () => {
-    sendButton.style.background = '#2563EB';
+    sendButton.style.background = currentTheme.primary;
   });
   
   // Create toggle button (chat icon)
@@ -142,18 +197,17 @@
   toggleButton.id = 'mindwise-toggle-btn';
   toggleButton.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    ${positionStyles}
     width: 60px;
     height: 60px;
-    background: #2563EB;
+    background: ${currentTheme.primary};
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px ${currentTheme.primary}40;
     font-size: 24px;
     z-index: 10001;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -167,15 +221,15 @@
   
   toggleButton.addEventListener('mouseenter', () => {
     toggleButton.style.transform = 'scale(1.05)';
-    toggleButton.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.4)';
+    toggleButton.style.boxShadow = `0 6px 16px ${currentTheme.primary}60`;
   });
   
   toggleButton.addEventListener('mouseleave', () => {
     toggleButton.style.transform = 'scale(1)';
-    toggleButton.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
+    toggleButton.style.boxShadow = `0 4px 12px ${currentTheme.primary}40`;
   });
   
-  // Create powered by footer
+  // Create powered by footer (conditionally shown)
   const poweredBy = document.createElement('div');
   poweredBy.style.cssText = `
     text-align: center;
@@ -184,8 +238,9 @@
     color: #6B7280;
     background: #f8f9fa;
     border-top: 1px solid #eee;
+    display: ${widgetConfig.showBranding ? 'block' : 'none'};
   `;
-  poweredBy.innerHTML = 'Powered by <a href="https://mindwise-demo.pages.dev/" target="_blank" style="color: #2563EB; text-decoration: none;">Mindwise</a>';
+  poweredBy.innerHTML = 'Powered by <a href="https://mindwise-demo.pages.dev/" target="_blank" style="color: ' + currentTheme.primary + '; text-decoration: none;">Mindwise</a>';
   
   // Assemble the chat interface
   chatInputContainer.appendChild(chatInput);
@@ -235,7 +290,7 @@
       font-size: 14px;
       line-height: 1.4;
       ${isUser ? 
-        'align-self: flex-end; background: #2563EB; color: white; border-bottom-right-radius: 4px;' : 
+        `align-self: flex-end; background: ${currentTheme.primary}; color: white; border-bottom-right-radius: 4px;` : 
         'align-self: flex-start; background: white; color: #1F2937; border: 1px solid #e5e7eb; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);'
       }
     `;
@@ -246,6 +301,9 @@
   
   // Show typing indicator
   function showTypingIndicator() {
+    // Remove existing typing indicator if present
+    hideTypingIndicator();
+    
     const typingIndicator = document.createElement('div');
     typingIndicator.id = 'typing-indicator';
     typingIndicator.style.cssText = `
@@ -320,7 +378,8 @@
       hideTypingIndicator();
       
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send message');
       }
       
       const data = await response.json();
@@ -360,6 +419,8 @@
   
   // Initialize chatbot
   async function initializeChatbot() {
+    if (isInitialized) return;
+    
     try {
       // Get chatbot info including language
       const response = await fetch(`${apiUrl}/chatbot/${botId}`);
@@ -367,22 +428,29 @@
         const data = await response.json();
         chatbotInfo = data;
         
-        // Add welcome message in the website's language
+        // Add welcome message in the website's language or custom greeting
         setTimeout(() => {
-          addMessage(data.greeting || "Hello! I'm your AI assistant. How can I help you today?");
+          const greeting = widgetConfig.greetingMessage || data.greeting || "Hello! I'm your AI assistant. How can I help you today?";
+          addMessage(greeting);
         }, 500);
       } else {
         // Fallback welcome message
         setTimeout(() => {
-          addMessage("Hello! I'm your AI assistant. How can I help you today?");
+          const greeting = widgetConfig.greetingMessage || "Hello! I'm your AI assistant. How can I help you today?";
+          addMessage(greeting);
         }, 500);
       }
+      
+      isInitialized = true;
     } catch (error) {
       console.error('[Mindwise Chatbot]: Error initializing chatbot:', error);
       // Fallback welcome message
       setTimeout(() => {
-        addMessage("Hello! I'm your AI assistant. How can I help you today?");
+        const greeting = widgetConfig.greetingMessage || "Hello! I'm your AI assistant. How can I help you today?";
+        addMessage(greeting);
       }, 500);
+      
+      isInitialized = true;
     }
   }
   

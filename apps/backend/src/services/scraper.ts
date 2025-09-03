@@ -36,7 +36,7 @@ export async function scrapeWebsite(url: string): Promise<{ content: string; lan
     const $ = cheerio.load(data);
 
     // 4. Remove unwanted elements
-    $('script, style, nav, footer, header, aside, .advertisement, .ads, .sidebar').remove();
+    $('script, style, nav, footer, header, aside, .advertisement, .ads, .sidebar, .nav, .menu').remove();
 
     // 5. Focus on main content areas if they exist
     let content;
@@ -46,6 +46,8 @@ export async function scrapeWebsite(url: string): Promise<{ content: string; lan
       content = $('article');
     } else if ($('.content').length > 0) {
       content = $('.content');
+    } else if ($('#content').length > 0) {
+      content = $('#content');
     } else {
       content = $('body');
     }
@@ -77,6 +79,9 @@ export async function scrapeWebsite(url: string): Promise<{ content: string; lan
     }
     if (error.code === 'ENOTFOUND') {
       throw new Error('Website not found. Please check the URL and try again');
+    }
+    if (error.code === 'ECONNREFUSED') {
+      throw new Error('Connection refused. The website may be down or blocking requests');
     }
     throw new Error(`Failed to scrape the website: ${error.message}`);
   }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import logger from '../utils/logger';
+import { getFromCache } from '../services/cacheService';
 
 const router = Router();
 
@@ -39,11 +40,25 @@ router.get('/health', async (req, res) => {
       });
     }
 
+    // Check Redis connectivity if configured
+    let redisStatus = 'not configured';
+    try {
+      await getFromCache('health-check');
+      redisStatus = 'connected';
+    } catch (error) {
+      redisStatus = 'disconnected';
+      logger.warn('Redis connectivity check failed', { error });
+    }
+
     // If we get here, everything is working
     logger.info('Health check successful');
     res.status(200).json({ 
       status: 'ok', 
       message: 'Service is healthy',
+      services: {
+        database: 'connected',
+        redis: redisStatus
+      },
       timestamp: new Date().toISOString()
     });
   } catch (error) {

@@ -8,9 +8,13 @@ import { detectLanguage, translateText, getWebsiteLanguage, getLocalizedGreeting
 import path from 'path';
 import logger from './utils/logger';
 import healthRoutes from './routes/health';
+import { validate, validationSchemas } from './middleware/validation';
+import { authenticate, optionalAuthenticate } from './middleware/auth';
+import { initializeRedis } from './services/cacheService';
 
 dotenv.config();
 
+// Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 if (!supabaseUrl || !supabaseServiceKey) { 
@@ -21,6 +25,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const app = express();
 app.use(express.json());
+
 // Configure CORS origins from environment variable or use defaults
 const corsOrigins = process.env.CORS_ORIGINS 
   ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
@@ -39,13 +44,14 @@ app.use('/api', healthRoutes);
 
 const port = process.env.PORT || 3001;
 
+// Initialize Redis
+initializeRedis().catch(error => {
+  logger.error('Failed to initialize Redis', { error });
+});
+
 // CHAT ENDPOINT - Enhanced with multilingual support and caching
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', validate(validationSchemas.chat), optionalAuthenticate, async (req, res) => {
   const { botId, query } = req.body;
-  if (!botId || !query) { 
-    logger.warn('Missing botId or query in chat request');
-    return res.status(400).json({ error: 'botId and query are required' }); 
-  }
   
   try {
     logger.info(`Processing chat request for bot ${botId}`);
@@ -105,12 +111,8 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // GET CHATBOT INFO - New endpoint to get chatbot language and greeting
-app.get('/api/chatbot/:botId', async (req, res) => {
+app.get('/api/chatbot/:botId', optionalAuthenticate, async (req, res) => {
   const { botId } = req.params;
-  if (!botId) { 
-    logger.warn('Missing botId in chatbot info request');
-    return res.status(400).json({ error: 'botId is required' }); 
-  }
   
   try {
     // Get chatbot info including language
@@ -146,12 +148,8 @@ app.get('/api/chatbot/:botId', async (req, res) => {
 });
 
 // SCRAPE ENDPOINT - Updated to just create a job
-app.post('/api/scrape', async (req, res) => {
+app.post('/api/scrape', authenticate, validate(validationSchemas.scrape), async (req, res) => {
   const { botId } = req.body;
-  if (!botId) { 
-    logger.warn('Missing botId in scrape request');
-    return res.status(400).json({ error: 'botId is required' }); 
-  }
 
   try {
     // Insert a job into the jobs table
@@ -176,7 +174,7 @@ app.post('/api/scrape', async (req, res) => {
 });
 
 // NEW ENDPOINT: Trigger job processing
-app.post('/api/trigger-jobs', async (req, res) => {
+app.post('/api/trigger-jobs', authenticate, async (req, res) => {
   try {
     logger.info('Manual trigger for job processing received');
     await processJobs(); // Process jobs once
@@ -188,20 +186,41 @@ app.post('/api/trigger-jobs', async (req, res) => {
   }
 });
 
-// DELETE ENDPOINT (no changes needed)
-app.delete('/api/bot/:botId', async (req, res) => {
+// DELETE ENDPOINT
+app.delete('/api/bot/:botId', authenticate, async (req, res) => {
   const { botId } = req.params;
-  if (!botId) { 
-    logger.warn('Missing botId in delete request');
-    return res.status(400).json({ error: 'botId is required' }); 
+  
+  try {
+    // Verify the bot belongs to the authenticated user
+    const user = (req as any).user;
+    const { data: bot, error: botError } = await supabase
+      .from('chatbots')
+      .select('user_id')
+      .eq('id', botId)
+      .single();
+      
+    if (botError || !bot) {
+      logger.warn(`Chatbot not found: ${botId}`);
+      return res.status(404).json({ error: 'Chatbot not found' });
+    }
+    
+    if (bot.user_id !== user.id) {
+      logger.warn('User not authorized to delete this bot', { userId: user.id, botId });
+      return res.status(403).json({ error: 'Not authorized to delete this bot' });
+    }
+    
+    const { error } = await supabase.from('chatbots').delete().eq('id', botId);
+    if (error) { 
+      logger.error(`Failed to delete chatbot ${botId}`, { error });
+      return res.status(500).json({ error: 'Failed to delete chatbot.' }); 
+    }
+    
+    logger.info(`Bot ${botId} deleted successfully`);
+    res.status(200).json({ message: 'Bot deleted successfully' });
+  } catch (error: any) {
+    logger.error(`Error deleting chatbot: ${error.message}`, { error });
+    res.status(500).json({ error: error.message });
   }
-  const { error } = await supabase.from('chatbots').delete().eq('id', botId);
-  if (error) { 
-    logger.error(`Failed to delete chatbot ${botId}`, { error });
-    return res.status(500).json({ error: 'Failed to delete chatbot.' }); 
-  }
-  logger.info(`Bot ${botId} deleted successfully`);
-  res.status(200).json({ message: 'Bot deleted successfully' });
 });
 
 // Rate limiting middleware
