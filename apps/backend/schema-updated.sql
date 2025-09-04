@@ -1,4 +1,4 @@
--- Mindwise Database Schema
+-- Mindwise Database Schema (Updated)
 -- This file reflects the current database structure after all updates
 
 -- Enable required extensions

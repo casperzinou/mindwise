@@ -27,7 +27,9 @@ router.get('/health', async (req, res) => {
     // Perform a simple query to check database connectivity
     // Using a simpler query that's more likely to succeed
     const { data, error } = await supabase
-      .rpc('uuid_generate_v4');
+      .from('chatbots')
+      .select('id')
+      .limit(1);
 
     if (error) {
       logger.error('Database connectivity check failed', { error });
