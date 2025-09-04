@@ -1,0 +1,4 @@
+{
+  "name": "test-file",
+  "description": "Test file to verify Cloudflare Pages can serve files"
+}
