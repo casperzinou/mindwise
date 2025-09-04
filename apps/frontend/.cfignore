@@ -1,0 +1,16 @@
+# Ignore files that are not needed for Cloudflare Pages deployment
+node_modules/
+.next/cache/
+*.log
+.env
+.env.local
+README.md
+.gitignore
+Dockerfile
+.eslintrc.json
+jest.config.js
+*.test.js
+*.test.ts
+__tests__
+coverage/
+*.md
