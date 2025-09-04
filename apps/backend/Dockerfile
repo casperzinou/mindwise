@@ -5,13 +5,13 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files
-COPY apps/backend/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
 
 # Copy the rest of the application code
-COPY apps/backend/. .
+COPY . .
 
 # Build the TypeScript code
 RUN npm run build
