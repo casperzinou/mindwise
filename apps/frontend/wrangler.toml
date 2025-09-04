@@ -1,4 +1,4 @@
-name = "mindwise-frontend"
+name = "mindwise"
 compatibility_date = "2025-08-31"
 pages_build_output_dir = ".next"
 
