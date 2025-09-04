@@ -25,10 +25,19 @@ export default function BotManagementPage() {
   const queryClient = useQueryClient();
   const botId = params.botId as string;
 
+  // Check for required environment variables
+  const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
+                      process.env.NEXT_PUBLIC_API_BASE_URL;
+
   // Fetch bot data
   const { data: bot, isLoading, isError, error } = useQuery({
     queryKey: ['bot', botId],
     queryFn: async () => {
+      if (!isConfigured) {
+        throw new Error('Application not properly configured');
+      }
+      
       if (!botId) throw new Error('Bot ID is required');
       
       const { data, error } = await supabase
@@ -43,7 +52,7 @@ export default function BotManagementPage() {
       
       return data;
     },
-    enabled: !!botId,
+    enabled: !!botId && !!isConfigured,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -52,9 +61,9 @@ export default function BotManagementPage() {
 <script>
   window.mindwiseBot = { 
     botId: "${bot.id}",
-    apiUrl: "http://localhost:3001/api"
+    apiUrl: "${API_BASE_URL}"
   };
-  (function(){var s=document.createElement('script');s.src='http://localhost:3001/mindwise-loader.js';document.head.appendChild(s);})();
+  (function(){var s=document.createElement('script');s.src='${API_BASE_URL.replace('/api', '')}/mindwise-loader.js';document.head.appendChild(s);})();
 </script>
 <!-- Powered by Mindwise -->` : '';
 
@@ -69,9 +78,13 @@ export default function BotManagementPage() {
   // Mutation for deleting bot
   const { mutate: deleteBot, isPending: isDeleting, isError: isDeleteError, error: deleteError, isSuccess: isDeleteSuccess } = useMutation({
     mutationFn: async () => {
+      if (!isConfigured) {
+        throw new Error('Application not properly configured');
+      }
+      
       if (!bot) throw new Error('Bot not found');
       
-      const response = await fetch(`${API_BASE_URL}/api/bot/${bot.id}`, {
+      const response = await fetch(`${API_BASE_URL}/bot/${bot.id}`, {
         method: 'DELETE',
       });
 
@@ -104,6 +117,22 @@ export default function BotManagementPage() {
       deleteBot();
     }
   };
+
+  // Handle missing configuration
+  if (!isConfigured) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Configuration Error</AlertTitle>
+          <AlertDescription>
+            The application is not properly configured. Please ensure the following environment variables are set:
+            NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and NEXT_PUBLIC_API_BASE_URL.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   // Handle loading state
   if (isLoading) {

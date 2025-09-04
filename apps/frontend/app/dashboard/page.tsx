@@ -31,11 +31,17 @@ export default function DashboardPage() {
   const { data: userData, isLoading: userLoading, isError: userError } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
+      // Check if we have valid Supabase configuration
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        throw new Error('Supabase configuration missing');
+      }
+      
       const { data: { session } } = await supabase.auth.getSession();
       return session;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
+    enabled: !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   });
 
   // Fetch user profile
@@ -50,7 +56,7 @@ export default function DashboardPage() {
         .single();
       return data;
     },
-    enabled: !!userData?.user?.id,
+    enabled: !!userData?.user?.id && !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 
@@ -70,7 +76,7 @@ export default function DashboardPage() {
       
       return data || [];
     },
-    enabled: !!userData?.user?.id,
+    enabled: !!userData?.user?.id && !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     staleTime: 30 * 1000, // 30 seconds
   });
 
@@ -85,6 +91,21 @@ export default function DashboardPage() {
       router.push('/auth');
     }
   }, [userData, userProfile, router]);
+
+  // Handle missing environment variables
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Configuration Error</AlertTitle>
+          <AlertDescription>
+            Supabase environment variables are not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   // Handle user loading state
   if (userLoading || profileLoading) {

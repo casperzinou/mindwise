@@ -21,6 +21,11 @@ export default function CreateBotPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  // Check for required environment variables
+  const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
+                      process.env.NEXT_PUBLIC_API_BASE_URL;
+
   // Validation functions
   const validateUrl = (url: string): boolean => {
     try {
@@ -67,6 +72,11 @@ export default function CreateBotPage() {
   // Mutation for creating bot
   const { mutate: createBot, isPending, isError, error, isSuccess } = useMutation({
     mutationFn: async () => {
+      // Check configuration
+      if (!isConfigured) {
+        throw new Error('Application not properly configured. Please check environment variables.');
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -91,7 +101,7 @@ export default function CreateBotPage() {
       }
 
       // 2. If the insert was successful, call our backend to start the scrape
-      const response = await fetch(`${API_BASE_URL}/api/scrape`, {
+      const response = await fetch(`${API_BASE_URL}/scrape`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,6 +140,22 @@ export default function CreateBotPage() {
     
     createBot();
   };
+
+  // Handle missing configuration
+  if (!isConfigured) {
+    return (
+      <div className="flex justify-center items-center min-h-screen p-4">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Configuration Error</AlertTitle>
+          <AlertDescription>
+            The application is not properly configured. Please ensure the following environment variables are set:
+            NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and NEXT_PUBLIC_API_BASE_URL.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
