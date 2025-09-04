@@ -24,13 +24,8 @@ function getSupabaseClient() {
     auth: {
       autoRefreshToken: true,
       persistSession: false
-    },
-    db: {
-      retry: {
-        attempts: MAX_RETRIES,
-        backoff: (attempt) => Math.pow(2, attempt) * RETRY_DELAY
-      }
     }
+    // Note: The retry configuration has been removed as it's not supported in this version
   });
 }
 

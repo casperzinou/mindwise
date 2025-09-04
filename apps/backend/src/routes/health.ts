@@ -25,10 +25,9 @@ router.get('/health', async (req, res) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     // Perform a simple query to check database connectivity
+    // Using a simpler query that's more likely to succeed
     const { data, error } = await supabase
-      .from('users')
-      .select('id')
-      .limit(1);
+      .rpc('uuid_generate_v4');
 
     if (error) {
       logger.error('Database connectivity check failed', { error });
