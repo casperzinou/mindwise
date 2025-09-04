@@ -1,0 +1,10 @@
+{
+  "name": "mindwise-frontend",
+  "main": ".worker-next/index.js",
+  "compatibility_date": "2025-08-31",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".worker-next/assets",
+    "binding": "ASSETS"
+  }
+}

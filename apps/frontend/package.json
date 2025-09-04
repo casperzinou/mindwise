@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --no-lint",
+    "build:worker": "next build --no-lint && npx @cloudflare/next-on-pages",
+    "deploy": "npm run build:worker && npx wrangler pages deploy",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
