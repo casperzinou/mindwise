@@ -11,53 +11,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   // Remove default 404 page to reduce bundle size
   excludeDefaultMomentLocales: true,
-  // Enable webpack optimizations to reduce bundle size
-  webpack: (config) => {
-    // Reduce bundle size by not bundling development dependencies
-    config.optimization.minimize = true;
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          // Reduce the size of vendor chunks
-          maxSize: 240000, // 240KB (under 25MB limit)
-        },
-      },
-    };
-    
-    // Disable webpack cache to reduce bundle size
-    config.cache = false;
-    
-    // Aggressive minimization
-    if (config.optimization.minimizer) {
-      config.optimization.minimizer.forEach((minimizer: any) => {
-        if (minimizer.options && minimizer.options.terserOptions) {
-          minimizer.options.terserOptions.compress = {
-            ...minimizer.options.terserOptions.compress,
-            drop_console: true,
-            drop_debugger: true,
-            pure_funcs: ['console.info', 'console.debug', 'console.warn']
-          };
-        }
-      });
-    }
-    
-    return config;
-  },
-  // Enable experimental features to reduce bundle size
-  experimental: {
-    optimizePackageImports: [
-      '@supabase/supabase-js',
-      '@radix-ui/react-label',
-      '@radix-ui/react-slot',
-      'lucide-react'
-    ]
-  },
   // Security headers
-  headers: async () => {
+  async headers() {
     return [
       {
         source: '/(.*)',
@@ -77,6 +32,12 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  // Handle environment variables gracefully
+  env: {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://akxvtqekdgqeclurvdcq.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key',
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://mindwise-backend.fly.dev/api',
   },
 };
 
