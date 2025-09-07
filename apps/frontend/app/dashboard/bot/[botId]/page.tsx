@@ -12,9 +12,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
-// Add Edge Runtime configuration for Cloudflare Pages
-export const runtime = 'edge';
-
 type Chatbot = {
   id: string;
   name: string;

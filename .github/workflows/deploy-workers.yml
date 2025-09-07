@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'apps/frontend/**'
   workflow_dispatch:
 
 jobs:
@@ -24,15 +26,10 @@ jobs:
           cd apps/frontend
           npm ci
 
-      - name: Build Next.js app
+      - name: Build Next.js app for Cloudflare Workers
         run: |
           cd apps/frontend
-          npm run build
-
-      - name: Deploy to Cloudflare Workers
-        run: |
-          cd apps/frontend
-          npx @cloudflare/next-on-pages
+          npm run build:worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
