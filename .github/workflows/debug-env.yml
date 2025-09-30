@@ -1,0 +1,75 @@
+name: Debug Environment Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Debug environment variables
+        run: |
+          echo "Debugging environment variables..."
+          echo "NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY length: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY && format('{0}', len(vars.NEXT_PUBLIC_SUPABASE_ANON_KEY)) }}"
+          echo "NEXT_PUBLIC_API_BASE_URL: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}"
+          
+          # Check if variables exist
+          if [ -z "${{ vars.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "WARNING: NEXT_PUBLIC_SUPABASE_URL is not set"
+          else
+            echo "SUCCESS: NEXT_PUBLIC_SUPABASE_URL is set"
+          fi
+          
+          if [ -z "${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" ]; then
+            echo "WARNING: NEXT_PUBLIC_SUPABASE_ANON_KEY is not set"
+          else
+            echo "SUCCESS: NEXT_PUBLIC_SUPABASE_ANON_KEY is set"
+          fi
+          
+          if [ -z "${{ vars.NEXT_PUBLIC_API_BASE_URL }}" ]; then
+            echo "WARNING: NEXT_PUBLIC_API_BASE_URL is not set"
+          else
+            echo "SUCCESS: NEXT_PUBLIC_API_BASE_URL is set"
+          fi
+
+      - name: Check frontend directory
+        run: |
+          cd apps/frontend
+          echo "Current directory: $(pwd)"
+          echo "Files in directory:"
+          ls -la
+          echo "Environment files:"
+          ls -la .env* 2>/dev/null || echo "No .env files found"
+
+      - name: Test Supabase connection
+        run: |
+          cd apps/frontend
+          echo "Testing if we can access Supabase variables..."
+          # Create a simple test script
+          cat > test-env.js << 'EOF'
+          console.log('Testing environment variables...');
+          console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+          console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '[SET]' : '[NOT SET]');
+          console.log('NEXT_PUBLIC_API_BASE_URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
+          
+          if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+            console.error('ERROR: NEXT_PUBLIC_SUPABASE_URL is required');
+            process.exit(1);
+          }
+          
+          if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            console.error('ERROR: NEXT_PUBLIC_SUPABASE_ANON_KEY is required');
+            process.exit(1);
+          }
+          
+          console.log('All required environment variables are set!');
+          EOF
+          
+          node test-env.js
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}

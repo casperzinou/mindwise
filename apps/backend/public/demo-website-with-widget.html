@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Website with Mindwise Chatbot</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <style>
+        :root {
+            --primary-blue: #2563EB;
+            --accent-blue: #1D4ED8;
+            --light-blue: #dbeafe;
+            --white: #ffffff;
+            --gray-100: #f9fafb;
+            --gray-200: #f3f4f6;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--white);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .main-header {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            border-radius: var(--border-radius);
+            margin: 32px 0;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 32px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 18px;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--primary-blue);
+        }
+        
+        /* Features Section */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-light {
+            background: var(--gray-100);
+        }
+        
+        .section-centered {
+            text-align: center;
+        }
+        
+        .section-centered h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        
+        .section-centered p {
+            font-size: 1.2rem;
+            color: var(--gray-500);
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        
+        .feature-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--primary-blue);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        
+        .feature-card p {
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+        
+        /* How It Works Section */
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 32px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-blue);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 auto 24px;
+        }
+        
+        .step h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        
+        .step p {
+            color: var(--gray-500);
+        }
+        
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .pricing-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .pricing-card.recommended {
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        
+        .price-container {
+            margin-bottom: 24px;
+        }
+        
+        .price-large {
+            font-size: 60px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+        
+        .price-small {
+            font-size: 16px;
+            color: var(--gray-500);
+        }
+        
+        .price-recurring {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin: 8px 0;
+        }
+        
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 24px 0;
+        }
+        
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            color: var(--gray-700);
+        }
+        
+        .features-list svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            stroke: #10B981;
+            stroke-width: 3;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background: var(--gray-900);
+            color: var(--white);
+            padding: 48px 0 24px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--white);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 20px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .main-nav ul {
+                gap: 16px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">NexusFlow</a>
+                <nav class="main-nav">
+                    <ul>
+                        <li class="nav-links"><a href="#features">Features</a></li>
+                        <li class="nav-links"><a href="#how-it-works">How It Works</a></li>
+                        <li class="nav-links"><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </nav>
+                <div class="nav-actions">
+                    <a href="/login" class="btn btn-secondary">Log In</a>
+                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>AI-Powered Workflow Automation for Modern Businesses</h1>
+                    <p>NexusFlow is the intelligent automation platform that connects your apps, data, and teams. Eliminate manual work, reduce errors, and accelerate growth with seamless, intelligent automation.</p>
+                    <div class="hero-buttons">
+                        <a href="/signup" class="btn btn-primary btn-large">Start Your Free Trial</a>
+                        <a href="#how-it-works" class="btn btn-secondary btn-large">See How It Works</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section section-light" id="features">
+            <div class="container">
+                <div class="section-centered">
+                    <h2>Powerful Features for Modern Businesses</h2>
+                    <p>Everything you need to create, deploy, and optimize intelligent automation workflows</p>
+                </div>
+                
+                <div class="features-grid">
+                    <!-- Feature 1 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                        </div>
+                        <h3>Instant Knowledge Base</h3>
+                        <p>Our AI automatically scans and learns your entire website, help center, and product documentation in minutes. It provides instant, accurate answers to 80% of customer questions, freeing up your team.</p>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 9a2 2 0 0 1 2 2v2H4v-2a2 2 0 0 1 2-2Z"></path>
+                                <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"></path>
+                                <path d="M9 13h6"></path>
+                                <path d="m12 16 1.5-1.5"></path>
+                            </svg>
+                        </div>
+                        <h3>Smart Human Handoff</h3>
+                        <p>When the AI detects a complex issue or a high-value sales lead, it seamlessly escalates the conversation by creating a detailed email ticket, ensuring your agents have all the context they need.</p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Code-Free Setup</h3>
+                        <p>Get your AI assistant live in minutes, not months. Simply copy and paste one line of code onto your website to deploy your custom-trained chatbot. No complex configuration or developer time required.</p>
+                    </div>
+                    
+                    <!-- Feature 4 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="m19 9-5 5-4-4-3 3"></path>
+                            </svg>
+                        </div>
+                        <h3>Analytics & Insights</h3>
+                        <p>Understand your customers like never before. See what questions they're asking, identify pain points, and track the leads your AI is generating, all from a simple dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section" id="how-it-works">
+            <div class="container">
+                <div class="section-centered">
+                    <h2>How NexusFlow Works</h2>
+                    <p>Get your AI assistant up and running in just a few simple steps</p>
+                </div>
+                
+                <div class="steps">
+                    <!-- Step 1 -->
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Create Your Account</h3>
+                        <p>Sign up for a free trial and create your first automation workflow in seconds.</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Connect Your Apps</h3>
+                        <p>Link your business applications with our extensive library of pre-built connectors.</p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Design Your Workflow</h3>
+                        <p>Use our intuitive visual builder to create powerful automation sequences.</p>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Deploy & Optimize</h3>
+                        <p>Launch your workflow and use analytics to continuously improve performance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="section section-light" id="pricing">
+            <div class="container">
+                <div class="section-centered">
+                    <h2>Simple, Transparent Pricing</h2>
+                    <p>Start for $1. Upgrade, downgrade, or cancel anytime. No questions asked.</p>
+                </div>
+                
+                <div class="pricing-grid">
+                    <!-- Plan 1: Starter -->
+                    <div class="pricing-card">
+                        <h3 class="plan-name">Starter</h3>
+                        <div class="price-container">
+                            <span class="price-large">$49</span>
+                            <span class="price-small">per month</span>
+                        </div>
+                        <p class="price-recurring">Billed after your $1 first month.</p>
+                        <a href="/signup" class="btn btn-secondary">Start for $1</a>
+                        <ul class="features-list">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                500 Conversations / mo
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Automatic Knowledge Sync
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Standard Email Support
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Plan 2: Professional (RECOMMENDED) -->
+                    <div class="pricing-card recommended">
+                        <div class="badge">Most Popular</div>
+                        <h3 class="plan-name">Professional</h3>
+                        <div class="price-container">
+                            <span class="price-large">$99</span>
+                            <span class="price-small">per month</span>
+                        </div>
+                        <p class="price-recurring">Billed after your $1 first month.</p>
+                        <a href="/signup" class="btn btn-primary">Start for $1</a>
+                        <ul class="features-list">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <strong>Unlimited</strong> Conversations
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Automatic Knowledge Sync
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <strong>Smart Human Handoff</strong>
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Priority Email Support
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Plan 3: Business -->
+                    <div class="pricing-card">
+                        <h3 class="plan-name">Business</h3>
+                        <div class="price-container">
+                            <span class="price-large">$199</span>
+                            <span class="price-small">per month</span>
+                        </div>
+                        <p class="price-recurring">Billed after your $1 first month.</p>
+                        <a href="/signup" class="btn btn-secondary">Start for $1</a>
+                        <ul class="features-list">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Everything in Pro, plus:
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <strong>Analytics & Insights</strong>
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Remove "Powered By" Branding
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Dedicated Onboarding Support
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>NexusFlow</h3>
+                    <p>AI-powered workflow automation for modern businesses.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="/documentation">Documentation</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                        <li><a href="/support">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/refund">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 NexusFlow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mindwise Chatbot Widget -->
+    <script>
+      window.mindwiseBot = { 
+        botId: "b2590fca-a443-4024-8e69-cd5f4d377cce",
+        apiUrl: "http://localhost:3001/api"
+      };
+      (function(){var s=document.createElement('script');s.src='http://localhost:3001/mindwise-chat.js';document.head.appendChild(s);})();
+    </script>
+    <!-- Powered by Mindwise -->
+</body>
+</html>

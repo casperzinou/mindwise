@@ -1,0 +1,13 @@
+name = "mindwise-frontend"
+main = ".worker-next/index.js"
+compatibility_date = "2025-08-31"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".worker-next/assets"
+binding = "ASSETS"
+
+[vars]
+NEXT_PUBLIC_SUPABASE_URL = "${NEXT_PUBLIC_SUPABASE_URL}"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+NEXT_PUBLIC_API_BASE_URL = "${NEXT_PUBLIC_API_BASE_URL}"
