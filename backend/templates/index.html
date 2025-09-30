@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindWise – AI Chatbot for Your Website</title>
+    <title>MindWise | AI Chatbot for Your Website</title>
+    <!-- Corrected static paths for favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -11,233 +12,116 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --brand: #6366f1;
-            --brand-dark: #4f46e5;
-            --bg: #fafafa;
-            --text: #111827;
-            --text-light: #6b7280;
-            --surface: #ffffff;
-            --border: #e5e7eb;
-            --radius: 0.75rem;
-            --shadow: 0 10px 15px -3px rgba(0,0,0,.04), 0 4px 6px -2px rgba(0,0,0,.02);
-            --font: 'Inter', system-ui, sans-serif;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-        }
-        header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.5rem;
-        }
-        .logo {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--brand);
-            text-decoration: none;
-        }
-        nav ul {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        nav a:hover {
-            color: var(--brand);
-        }
-        .hero {
-            padding: 8rem 0 5rem;
-            text-align: center;
-            background: linear-gradient(135deg, #f5f7ff 0%, #e0e7ff 100%);
-        }
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-        }
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-        .hero .btn {
-            font-size: 1.125rem;
-            padding: 1rem 2.5rem;
-        }
-        .section {
-            padding: 5rem 0;
-        }
-        .section h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        .section p {
-            text-align: center;
-            color: var(--text-light);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-        }
-        .features-grid {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        }
-        .feature-card {
-            background: var(--surface);
-            padding: 2.5rem 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: transform 0.2s;
-        }
-        .feature-card:hover {
-            transform: translateY(-4px);
-        }
-        .feature-card .icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1.5rem;
-            background: var(--brand);
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .feature-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-        .feature-card p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
-        footer {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            color: var(--text-light);
-            font-size: 0.875rem;
-        }
-        @media (max-width: 600px) {
-            header .container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            nav ul {
-                gap: 1rem;
-            }
-        }
-    </style>
+    <!-- Corrected path for stylesheet -->
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
-    <header>
+    <!-- ======================= -->
+    <!--      Header             -->
+    <!-- ======================= -->
+    <header class="main-header">
         <div class="container">
             <a href="index.html" class="logo">MindWise</a>
-            <nav>
+            <nav class="main-nav">
                 <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="pricing.html">Pricing</a></li>
+                    <li class="nav-links"><a href="#features">Features</a></li>
+                    <li class="nav-links"><a href="pricing.html">Pricing</a></li>
                 </ul>
             </nav>
-            <a href="register.html" class="btn btn-primary">Start Your $1 Trial</a>
+            <div class="nav-actions">
+                <a href="register.html" class="btn btn-primary">Start Your $1 Trial</a>
+            </div>
         </div>
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Turn Your Website into a 24/7 Sales &amp; Support Agent</h1>
-                <p>Add a custom AI chatbot to your site with one line of code that instantly answers visitor questions and converts them into customers.</p>
-                <div class="btn-group">
-                    <a href="pricing.html" class="btn btn-primary">Claim Your $1 Offer</a>
-                    <a href="https://app.mindwise.ai/signup" class="btn btn-secondary">Sign Up Now</a>
-                </div>
-            </div>
-        </section>
 
-        <section class="section" id="features">
+       <!-- ======================= -->
+<!-- NEW VIBRANT HERO SECTION -->
+<!-- ======================= -->
+<section class="hero-section" id="hero">
+    <div class="background-gradient"></div>
+    <div class="container">
+        <div class="hero-content">
+            <h1>Turn Your Website into a <span class="highlight">24/7 Sales and Support Agent.</span></h1>
+            <p class="sub-headline">Add a custom AI chatbot to your site with one line of code that instantly answers visitor questions and converts them into customers.</p>
+            <a href="#offer" class="btn btn-primary cta-button">Claim Your $1 Offer</a>
+        </div>
+    </div>
+</section>
+
+       <!-- ================================== -->
+<!--  THE DEFINITIVE "GLITCH" OFFER SECTION -->
+<!-- ================================== -->
+<section class="pricing-section" id="offer">
+    <div class="container section-centered">
+        <h2>Our Accountants Are Ready to Riot.</h2>
+        <p class="sub-headline" style="max-width: 850px;">
+            They demand we charge $99/mo. But our genius engineers overbuilt our servers for 5,000 daily users, and right now, most of that power is sitting idle. So we're making a reckless bet: using that idle server capacity as our entire marketing budget. We know once you try it, going back will feel like trading a supercomputer for a chalkboard. Why? Because OUR AI is just that good.
+        </p>
+        
+        <div class="pricing-card" style="max-width: 650px; margin-top: 40px;">
+            <!-- The button is the entire offer -->
+            <a href="/pricing.html" class="btn btn-primary cta-button">
+                <span class="button-main-text">Claim the "Glitch" Price</span>
+                <span class="button-sub-text">$99/mo of Server Power for $1</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+        <!-- ================================== -->
+        <!--  STEP 3: THE PROOF (Features Grid)  -->
+        <!-- ================================== -->
+        <section class="features-section" id="features">
             <div class="container">
                 <h2>Powerful Features, Effortless Setup</h2>
-                <p>Everything you need to deliver instant, accurate support—without writing a single line of code.</p>
                 <div class="features-grid">
+                    <!-- Feature 1 -->
                     <div class="feature-card">
                         <div class="icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4-4V9a2 2 0 0 1-2-2h-2a2 2 0 0 1-2-2V3"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                         </div>
                         <h3>Instant Knowledge Base</h3>
-                        <p>Our AI scans your website, docs, and FAQs in minutes and answers 80 % of questions on the spot.</p>
+                        <p>Our AI automatically scans and learns your entire website, help center, and product documentation in minutes. It provides instant, accurate answers to 80% of customer questions, freeing up your team.</p>
                     </div>
+                    <!-- Feature 2 -->
                     <div class="feature-card">
                         <div class="icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a2 2 0 0 1 2 2v2H4v-2a2 2 0 0 1 2-2Z"/><path d="M9 13h6"/><path d="m12 16 1.5-1.5"/><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M12 4v-1.5"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a2 2 0 0 1 2 2v2H4v-2a2 2 0 0 1 2-2Z"></path><path d="M9 13h6"></path><path d="m12 16 1.5-1.5"></path><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"></path><path d="M12 4v-1.5"></path></svg>
                         </div>
                         <h3>Smart Human Handoff</h3>
-                        <p>Complex issue? High-value lead? The bot escalates seamlessly and creates a detailed ticket for your team.</p>
+                        <p>When the AI detects a complex issue or a high-value sales lead, it seamlessly escalates the conversation by creating a detailed email ticket, ensuring your agents have all the context they need.</p>
                     </div>
+                    <!-- Feature 3 -->
                     <div class="feature-card">
                         <div class="icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                         </div>
                         <h3>Code-Free Setup</h3>
-                        <p>Copy one line of code, paste it on your site, and your AI assistant is live—no developers required.</p>
+                        <p>Get your AI assistant live in minutes, not months. Simply copy and paste one line of code onto your website to deploy your custom-trained chatbot. No complex configuration or developer time required.</p>
                     </div>
+                    <!-- Feature 4 -->
                     <div class="feature-card">
                         <div class="icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                         </div>
-                        <h3>Analytics &amp; Insights</h3>
-                        <p>Track questions, pain points, and leads in a simple dashboard that shows exactly how your AI is performing.</p>
+                        <h3>Analytics & Insights</h3>
+                        <p>Understand your customers like never before. See what questions they're asking, identify pain points, and track the leads your AI is generating, all from a simple dashboard.</p>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
-    <footer>
+    <!-- ======================= -->
+    <!--      Footer             -->
+    <!-- ======================= -->
+    <footer class="main-footer">
         <div class="container">
-            <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+           <p>© 2025 MindWise. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
         </div>
     </footer>
 
